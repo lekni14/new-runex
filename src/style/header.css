@@ -1,0 +1,10 @@
+.save-btn {	height: 36px;	width: 76px;	border-radius: 4px;	background-color: #027840; color: #FFFFFF;	font-family: Arial;	font-size: 14px;	line-height: 16px;	text-align: center;}
+.discard-btn {
+	height: 36px;
+	width: 93px;
+	border: 1px solid #C4CDD5;
+	border-radius: 4px;
+	background-color: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.09);
+    color: #3E4348;	font-family: Arial;	font-size: 14px;	line-height: 16px;	text-align: center
+}
