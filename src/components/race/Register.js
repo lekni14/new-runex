@@ -1,5 +1,5 @@
 import React from 'react'
-import { Content } from '.'
+import Content from '../race/Content'
 import { eventService } from '../../services'
 import Icon from '@material-ui/core/Icon';
 
