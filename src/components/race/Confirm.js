@@ -857,14 +857,14 @@ function mapState (state) {
     return { events };
 }
 
-// const actionCreators = {
-//     addAddress: userActions.addAddress,
-//     updateProfile: userActions.updateProfile,
-//     regEvent: eventActions.regEvent,
-//     regEventByPaypal: eventActions.regEventByPaypal,
-//     product: eventActions.selectedProducts,
-//     ticket: eventActions.selectedTicket,
-// };
+const actionCreators = {
+    addAddress: userActions.addAddress,
+    updateProfile: userActions.updateProfile,
+    regEvent: eventActions.regEvent,
+    regEventByPaypal: eventActions.regEventByPaypal,
+    product: eventActions.selectedProducts,
+    ticket: eventActions.selectedTicket,
+};
 
-// const connectedContent = connect(mapState, actionCreators)(Confirm);
-// export { connectedContent as Confirm }
+const connectedContent = connect(mapState, actionCreators)(Confirm);
+export { connectedContent as Confirm }

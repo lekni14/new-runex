@@ -43,8 +43,8 @@ class Race extends React.Component {
     }
 
     onChangeTicket = (e) => {
-        const { event } = this.props
-        event.event.ticket.map((item, index)=>{
+        const { event, tickets } = this.props
+        tickets.map((item, index)=>{
             if(item.id === e.target.value){
                 //console.log(e.target.value)
                 this.setState({ticket:item})
@@ -197,8 +197,8 @@ class Race extends React.Component {
             )
         } else {
             var check = 0
-            if (ticket.product !== null){
-                ticket.product.map((item) => (
+            if (this.props.products !== null){
+                this.props.products.map((item) => (
                     item.show ? check += 1 : check += 0
                 ))
                 if (productTickets.length === check) {
@@ -252,13 +252,14 @@ class Race extends React.Component {
     }
 
     showPrice () {
+        console.log(this.props)
         const { event } = this.props
         const { products, selectTicket, ticket } = this.state
         var total = 0
         if (event.event !== undefined || event.event !== null) {
             if (selectTicket === undefined) {
-                if (event.event.ticket.length > 0) {
-                    total = event.event.ticket[0].price
+                if (this.props.tickets.length > 0) {
+                    total = this.props.tickets[0].price
                     products.map((element) => (
                         total += element.price
                     ))
@@ -328,20 +329,20 @@ class Race extends React.Component {
 
     render () {
         const { productOnTicketSize, ticket } = this.state
-        const { event } = this.props
+        const { event, tickets } = this.props
         return (
             <Card>
                 <Card.Body>
                     <Row>
                         <Col lg={5} md={12} className="component-event-aside">
                             <Card className="mb-5">
-                                <Card.Img variant="top" src={event.event ? IMAGE_URL + event.event.cover : ''} />
+                                <Card.Img variant="top" src={event ? event.cover : ''} />
                                 <Card.Body>
-                                    <h4 className="h4">{event.event ? event.event.name : ''}</h4>
-                                    <h1 className="mb-0" onChange={e => this.setState({ showPrice: e.value })}>{this.showPrice() + ' ' + event.event.ticket[0].unit}</h1>
+                                    <h4 className="h4">{event ? event.name : ''}</h4>
+                                    <h1 className="mb-0" onChange={e => this.setState({ showPrice: e.value })}>{this.showPrice() + ' ' + event.ticket[0].currency}</h1>
                                     {/* <p className="text-muted mb-4">(including. postage fee)</p> */}
-                                    <Card.Title style={{ display: event.event ? (event.event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
-                                    <Media style={{ marginTop: 8}} hidden={event.event ? (event.event.is_free === true ? false : false) : false}>
+                                    <Card.Title style={{ display: event.event ? (event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
+                                    <Media style={{ marginTop: 8}} hidden={event.event ? (event.is_free === true ? false : false) : false}>
                                         <img
                                             width={28}
                                             height={28}
@@ -349,18 +350,18 @@ class Race extends React.Component {
                                             src={iconmedal}
                                             alt="runex"
                                         />
-                                        <Media.Body style={{ display: event.event ? (event.event.is_free === true ? "none" : "flex") : 'none' }}>
+                                        <Media.Body style={{ display: event ? (event.is_free === true ? "none" : "flex") : 'none' }}>
                                             <h6 className="mb-1 pt-1">Finisher's Medal</h6>
                                         </Media.Body>
 
                                     </Media>
-                                    { event.event ? this.displayFinishedAward(event.event.id) : '' }
+                                    { event ? this.displayFinishedAward(event.id) : '' }
                                 </Card.Body>
                                 <Card.Footer className="bg-white mb-3">
                                     <h6>Hurry! Registration close in</h6>
                                     <ul className="list-group list-group-horizontal text-center">
                                         <li className="list-group-item px-3 border-0">
-                                            <h6>{event.event ? utils.convertDateApiToString(event.event.end_reg) : ''}<small className="ml-1 text-muted"></small></h6>
+                                            <h6>{event ? utils.convertDateApiToString(event.end_reg) : ''}<small className="ml-1 text-muted"></small></h6>
                                         </li>
                                         {/* <li className="list-group-item px-3 border-0">
                                             <h6>13<small className="ml-1 text-muted">days</small></h6>
@@ -385,7 +386,7 @@ class Race extends React.Component {
                                     <Form.Label>Distance<span className="text-danger">*</span></Form.Label>
                                     <select className="custom-select" onChange={this.onChangeTicket.bind()}>
                                         <option value='' key='99'>{this.state.select_ticket}</option>
-                                        {event.event ? event.event.ticket.map((item, index) => (
+                                        {tickets ? tickets.map((item, index) => (
                                             <option value={item.id} key={index}>{item.title+' '+item.distance+ ' km.'}</option>
                                         )) : ''}
                                     </select>

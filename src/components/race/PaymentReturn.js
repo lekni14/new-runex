@@ -1,19 +1,8 @@
 import React from 'react'
-import Content from '../race/Content'
-import { eventService } from '../../services'
-import Icon from '@material-ui/core/Icon';
-
-
-// import ReactWizard from 'react-bootstrap-wizard';
-// import { Container, Row, Col } from 'reactstrap';
+import { ContentReturn } from '.'
+import { regEventService } from '../../services'
 import { Navbar, Nav, Container} from 'react-bootstrap'
-
-// const StepsName = [
-//   { Name: "Address", isActive: true, status:'active' },
-//   { Name: "Race detail", isActive: false, status:'wait' },
-//   { Name: "Confirm", isActive: false, status:'wait' }
-// ]
-import { history } from '../../store'
+import Icon from '@material-ui/core/Icon'
 
 class Steps extends React.Component {
 
@@ -24,7 +13,7 @@ class Steps extends React.Component {
 
   render () {
     return (
-      <Navbar bg="light" variant="light" expand="md" style={{ minHeight: '80' }} className="border-1 navbar-step py-0">
+      <Navbar bg="light" variant="light" expand="md" style={{ minHeight: '80' }} className="border-1 navbar-step">
         <Container>
           <Nav className="mr-auto nav-step">
             {/*  */}
@@ -58,25 +47,25 @@ class Tab extends React.Component {
   onChangeTab=()=>{
     this.props.handleClickChange(this.props.data)
   }
+
   onOpenCollapse=()=>{
     this.props.onOpenCollapse()
     // this.props.handleClickChange(this.props.data)
   }
 
   render() {
+    // console.log(this.props.data)
     var hidden = this.props.data.Name==='Confirm' ? "float-right mt-1 show-mobile d-none" : "float-right mt-1 d-none"
     return (
       // <Nav.Link onClick={this.onChangeTab.bind()} className={this.props.data.status==='wait'?'disabled':''}>
-      <Nav.Link className={this.props.data.status==='wait'?'disabled':this.props.data.status}  onClick={this.onOpenCollapse.bind()}>
+      <Nav.Link className={this.props.data.status==='wait'?'disabled':''} onClick={this.onOpenCollapse.bind()}>
         <IconRunnung color={this.props.data.status}></IconRunnung>
       {this.props.data.Name}<Icon  className={hidden}>{this.props.collapse===true?'keyboard_arrow_up':'keyboard_arrow_down'}</Icon>
     </Nav.Link>
     );
   }
 }
-
 function IconRunnung(props) {
-  console.log(props)
   const color = props.color==='active' ? '#FA6400':props.color==='finish' ?'#5EB503':'rgba(0,0,0,0.5)'
   
   return (
@@ -107,8 +96,7 @@ function IconRunnung(props) {
     </svg>
   )
 }
-
-class Regiter extends React.Component {
+class PaymentReturn extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -116,7 +104,7 @@ class Regiter extends React.Component {
       nextTab: {},
       backTab: {},
       event:{},
-      is_collapse_open: true,
+      is_collapse_open: false,
       StepsName: [
         { Name: "Address", isActive: false, status:'wait' },
         { Name: "Race detail", isActive: false, status:'wait' },
@@ -126,35 +114,23 @@ class Regiter extends React.Component {
   }
 
   componentDidMount(){
-    // this.getEvent()
-    this.initailPage()
-    console.log(this.props)
-    this.setState({
-        event: this.props.event
-    })
-    this.state.StepsName[0]['isActive'] = true;
-    this.state.StepsName[0]['status'] = 'active';
+    this.getRegEvent()
+    this.state.StepsName[2]['isActive'] = true;
+    this.state.StepsName[2]['status'] = 'active';
   }
 
-  initailPage = async () => {
-    await this.checkUserRegisterEvent()
-  }
+  getRegEvent () {
+    const { regID } = this.props.match.params
+    // const { eventID } = this.props.route.match.params
 
-  
-
-  checkUserRegisterEvent = () => {
-    console.log(this.state.event)
-    const { slug } = this.state.event
-
-    eventService.checkUserRegisteredEvent(slug).then(res => {
-      console.log(res)
-      if (res.code === 200) {
-        if (res.data.data) {
-          history.push('/my-event')
+    regEventService.getRegEventDetail(regID).then(res => {
+        if (res.data.code === 200) {
+            this.setState({
+                event: res.data.data
+            })
         }
-      }
     })
-  }
+}
 
   handleClickChange=(step)=> {
     const { StepsName } = this.state
@@ -170,7 +146,7 @@ class Regiter extends React.Component {
     })
     this.setState({StepsName:tmp})
   }
-
+  
   onOpenCollapse=()=>{
     //console.log(this.state.is_collapse_open)
     if (this.state.is_collapse_open===true){
@@ -182,17 +158,15 @@ class Regiter extends React.Component {
   }
 
   render () {
-    const { regEvent } = this.props
-    console.log(this.state.event)
     return (
       <div>
-        <Steps collapse={this.state.is_collapse_open} onOpenCollapse={this.onOpenCollapse} stepName={this.state.StepsName}/> {/*changeTab={this.handleClickChange}*/} 
+        <Steps collapse={this.state.is_collapse_open} onOpenCollapse={this.onOpenCollapse} stepName={this.state.StepsName}/> {/*changeTab={this.handleClickChange}*/}
         <Container className="mt-5" >
-        <Content collapse={this.state.is_collapse_open} stepName={this.state.StepsName} onTabChange={this.handleClickChange} event={this.props.event} tickets={this.props.tickets} products={this.props.products}/>
+        <ContentReturn collapse={this.state.is_collapse_open} stepName={this.state.StepsName} onTabChange={this.handleClickChange} event={this.state.event}/>
         </Container>
       </div>
     )
   }
 }
 
-export default Regiter
+export default PaymentReturn

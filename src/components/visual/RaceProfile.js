@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
-// import iconshirt from '../../images/icon-shirt.svg'
-// import iconshirtactive from '../../../images/icon-tshirt-active.svg'
+import iconshirt from '../../images/icon-shirt.svg'
+import iconshirtactive from '../../images/icon-tshirt-active.svg'
 import ThaiAddress from "react-thai-address";
 // import iconrunning from '../../images/icon-running.svg'
 import iconrunningwhite from '../../images/icon-running-white.svg'
 //import moment from 'moment'
-import { utils } from '../../../utils/utils'
-import { IMAGE_URL } from '../../../utils/constants'
-import { history } from '../../../store'
-import { eventService, userService } from '../../../services'
+import { utils } from '../../utils/utils'
+import { IMAGE_URL } from '../../utils/constants'
+import { history } from '../../store'
+import { eventService, userService } from '../../services'
 // import { CountryDropdown } from 'react-country-region-selector'
 import Swal from 'sweetalert2'
 import ReactDatePicker from 'react-datepicker'
@@ -20,7 +20,7 @@ export default class RaceProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(utils.getUser()),
+            user: {},
             fullname: '',
             citycen_id: '',
             passport: '',
@@ -68,7 +68,11 @@ export default class RaceProfile extends Component {
     }
 
     componentDidMount () {
-        this.getEvent()
+        // this.getEvent()
+        // console.log(this.props)
+        this.setState({
+            event: this.props.event
+        })
         const { user } = this.state
         if (user.address !== undefined && user.address !== null) {
             if (user.address.length > 0) {
@@ -282,8 +286,7 @@ export default class RaceProfile extends Component {
     }
 
     onChangeTicket = (e) => {
-        const { event } = this.state
-        event.ticket.map((item, index) => {
+        this.props.tickets.map((item, index) => {
             if (item.id === e.target.value) {
                 //console.log(e.target.value)
                 this.setState({ ticket: item })
@@ -478,7 +481,8 @@ export default class RaceProfile extends Component {
         data.nationality = this.state.country
         data.fullname = this.state.firstname + ' ' + this.state.lastname
         userService.updateUser(data).then(response => {
-            if (response.status === 200) {
+            console.log(response)
+            if (response.code === 200) {
                 // console.log(response)
                 const { productTickets, ticket, event, products, reciept_type } = this.state
 
@@ -577,6 +581,7 @@ export default class RaceProfile extends Component {
 
         const { validated, birthdate, citycen_id, gender, phone, address_no, province, district, postcode, city } = this.state
         const { event, productOnTicketSize, ticket, blood_type, country, emergency_contact, emergency_phone } = this.state
+        console.log(event)
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -598,7 +603,7 @@ export default class RaceProfile extends Component {
                             <Row>
                                 <Col md={4}>
                                     <Card className="mb-5">
-                                        <Card.Img variant="top" src={event ? IMAGE_URL + event.cover : ''} />
+                                        <Card.Img variant="top" src={event ? event.cover : 'dddd'} />
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }} >ราคาค่าสมัคร</p>
@@ -644,7 +649,7 @@ export default class RaceProfile extends Component {
                                     <Card>
                                         <Card.Body>
                                             <Card.Title>กรอกข้อมูลผู้สมัคร</Card.Title>
-                                            <Form className="mb-5" validated={validated} onSubmit={handleValidate}>
+                                            <Form className="mb-5" noValidate validated={validated} onSubmit={handleValidate}>
                                                 <Form.Row>
                                                     <Form.Group as={Col} controlId="validationCustom01">
                                                         <Form.Label>ชื่อ,Name<span className="text-danger">*</span></Form.Label>
@@ -675,7 +680,7 @@ export default class RaceProfile extends Component {
                                                     <Form.Row>
                                                         <Col xs={5}>
                                                             <Form.Label>บัตรประชาชน, Passport<span className="text-danger">*</span></Form.Label>
-                                                            <Form.Control value={this.state.citycen_type} as="select" onChange={this.onSelectCitycen} required>
+                                                            <Form.Control value={this.state.citycen_type} className="form-select" as="select" onChange={this.onSelectCitycen} required>
                                                                 <option value="CiticenID">บัตรประชาชน</option>
                                                                 <option value="Passport">Passport</option>
                                                             </Form.Control>
@@ -701,7 +706,7 @@ export default class RaceProfile extends Component {
                                                         <Col xs={5}>
 
                                                             <Form.Label>เพศ, Gender<span className="text-danger">*</span></Form.Label>
-                                                            <Form.Control value={gender} as="select" onChange={this.onSelectGender} required>
+                                                            <Form.Control value={gender} as="select" className="form-select" onChange={this.onSelectGender} required>
                                                                 <option value="">ระบุ, Select</option>
                                                                 <option value="Male">Male</option>
                                                                 <option value="Female">Female</option>
@@ -735,7 +740,7 @@ export default class RaceProfile extends Component {
                                                         </Col>
                                                         <Col xs={5}>
                                                             <Form.Label>กรุ๊ปเลือด, Blood type<span className="text-danger">*</span></Form.Label>
-                                                            <Form.Control value={blood_type} as="select" onChange={this.onSelectBloodType} required>
+                                                            <Form.Control value={blood_type} as="select" className="form-select" onChange={this.onSelectBloodType} required>
                                                                 <option value="">ระบุ, Select</option>
                                                                 <option value="A">A</option>
                                                                 <option value="B">B</option>
@@ -772,6 +777,7 @@ export default class RaceProfile extends Component {
                                                         <Form.Label>จังหวัด, Province<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control
                                                             as="select"
+                                                            className="form-select"
                                                             onChange={this.onSelectedprovince}
                                                             required
                                                             value={province}
@@ -787,6 +793,7 @@ export default class RaceProfile extends Component {
                                                         <Form.Label>อำเภอ, District<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control
                                                             as="select"
+                                                            className="form-select"
                                                             onChange={this.onSelectedDistrict}
                                                             required
                                                             value={district}
@@ -806,6 +813,7 @@ export default class RaceProfile extends Component {
                                                         <Form.Label>ตำบล, Sub District<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control
                                                             as="select"
+                                                            className="form-select"
                                                             onChange={this.onSelectedTumbon}
                                                             required
                                                             value={city}
@@ -830,9 +838,9 @@ export default class RaceProfile extends Component {
 
                                                 <Form.Group controlId="formTicket">
                                                     <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
-                                                    <select className="custom-select" onChange={this.onChangeTicket.bind()} required>
+                                                    <select  className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
                                                         <option value='' key='99'>{this.state.select_ticket}</option>
-                                                        {event.ticket !== undefined ? event.ticket.map((item, index) => (
+                                                        {this.props.tickets !== undefined ? this.props.tickets.map((item, index) => (
                                                             <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
                                                         )) : ''}
                                                     </select>

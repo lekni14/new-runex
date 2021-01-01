@@ -15,7 +15,7 @@ class Address extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: sessionStorage.getItem('user_tmp') ? JSON.parse(sessionStorage.getItem('user_tmp')) : JSON.parse(utils.getUser()),
+            user: sessionStorage.getItem('user_tmp') ? JSON.parse(sessionStorage.getItem('user_tmp')) : {},
             fullname: sessionStorage.getItem('user_tmp') ? JSON.parse(sessionStorage.getItem('user_tmp')).fullname : '',
             citycen_id: sessionStorage.getItem('user_tmp') ? JSON.parse(sessionStorage.getItem('user_tmp')).citycen_id : '',
             phone: sessionStorage.getItem('user_tmp') ? JSON.parse(sessionStorage.getItem('user_tmp')).phone : '',
@@ -48,6 +48,7 @@ class Address extends React.Component {
     }
 
     componentDidMount () {
+        const { event } = this.props
         const { user } = this.state
         if (sessionStorage.getItem('user_tmp') !== undefined && sessionStorage.getItem('user_tmp') !== null) {
             this.setState({ user: JSON.parse(sessionStorage.getItem('user_tmp')) }, () => {
@@ -134,8 +135,8 @@ class Address extends React.Component {
         if (nextProps.event) {
             const { event } = this.props
             if (event !== undefined && event !== null) {
-                if (event.event !== null && event.event !== undefined) {
-                    if (event.event.category.id === '5d7dbc800ea2d6053ea1e226') {
+                if (event !== null && event !== undefined) {
+                    if (event.category.id === 'Virtual Run') {
                         this.setState({ isVR: true })
                     }
                 }
@@ -385,6 +386,7 @@ class Address extends React.Component {
     render () {
         const { isVR, validated, birthdate, citycen_id, gender, phone, address_no, province, district, postcode, city, hasAddress } = this.state
         const { event } = this.props
+        console.log(event)
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -403,10 +405,10 @@ class Address extends React.Component {
                     <Row>
                         <Col md={5}>
                             <Card className="mb-5">
-                                <Card.Img variant="top" src={event.event ? IMAGE_URL + event.event.cover : ''} />
+                                <Card.Img variant="top" src={event ?  event.cover : ''} />
                                 <Card.Body>
-                                    <h4 className="h4">{event.event ? event.event.name : ''}</h4>
-                                    <h1 className="mb-0">{event.event ? event.event.ticket[0].price + ' ' + event.event.ticket[0].unit : ''}</h1>
+                                    <h4 className="h4">{event ? event.name : ''}</h4>
+                                    <h1 className="mb-0">{event ? event.ticket[0].price + ' ' + event.ticket[0].currency : ''}</h1>
                                     <p className="text-muted mb-4" style={{ display: event.event ? (event.event.is_free === true ? "none" : "block") : 'none' }}>(including. postage fee)</p>
                                     <Card.Title style={{ display: event.event ? (event.event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
 
@@ -450,7 +452,7 @@ class Address extends React.Component {
                         </Col>
                         <Col md={7}>
                             <Card.Title>Address</Card.Title>
-                            <Form className="mb-5" validated={validated} onSubmit={handleValidate}>
+                            <Form noValidate  className="mb-5" validated={validated} onSubmit={handleValidate}>
                                 <Form.Row>
                                     <Form.Group as={Col} controlId="validationCustom01">
                                         <Form.Label>First name(EN)<span className="text-danger">*</span></Form.Label>
@@ -564,6 +566,7 @@ class Address extends React.Component {
                                         <Form.Label>Province<span className="text-danger">*</span></Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className="form-select"
                                             onChange={this.onSelectedprovince}
                                             required
                                             value={province}
@@ -580,6 +583,7 @@ class Address extends React.Component {
                                         <Form.Label>District<span className="text-danger">*</span></Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className="form-select"
                                             onChange={this.onSelectedDistrict}
                                             required
                                             value={district}
@@ -601,6 +605,7 @@ class Address extends React.Component {
                                         <Form.Label>Sub District<span className="text-danger">*</span></Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className="form-select"
                                             onChange={this.onSelectedTumbon}
                                             required
                                             value={city}

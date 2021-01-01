@@ -45,7 +45,12 @@ h6,
 .navbar-expand-md .navbar-nav .nav-link {
   font-family: "Prompt", sans-serif;
 }
-
+.form-select.is-invalid, .was-validated .form-select:invalid{
+  background-position: center right calc(.375em + .875rem);
+}
+.form-select.is-valid, .was-validated .form-select:valid{
+  background-position: center right calc(.375em + .875rem);
+}
 #footer a {
   color: #ffffff;
   text-decoration: none !important;
@@ -213,7 +218,7 @@ h6,
   border-bottom: 2px solid #dee2e6 !important;
 }
 .iconrunning {
-  background-image: url("/images/icon-running.svg");
+  background-image: url("../images/icon-running.svg");
 }
 .iconwidth-20 {
   width: 20px;
