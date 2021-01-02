@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Container } from 'react-bootstrap'
-import iconmedal from '../../../images/icon-medal.svg'
-import iconshirtactive from '../../../images/icon-tshirt-active.svg'
-import { utils } from '../../../utils/utils'
-import { IMAGE_URL, regStatusConstants } from '../../../utils/constants'
-import { history } from '../../../store'
-import { regEventService } from '../../../services'
+import iconmedal from '../../images/icon-medal.svg'
+import iconshirtactive from '../../images/icon-tshirt-active.svg'
+import { utils } from '../../utils/utils'
+import { IMAGE_URL, regStatusConstants } from '../../utils/constants'
+import { history } from '../../store'
+import { regEventService } from '../../services'
 import ConditionsModal from './ConditionsModal'
 import Swal from 'sweetalert2'
 
@@ -21,6 +21,7 @@ export default class RaceSummary extends Component {
 
     showPrice () {
         const { ticket_options } = this.props.location.state
+        console.log(ticket_options)
         var total = 0
         if (ticket_options !== undefined) {
             ticket_options.map(item => {
@@ -175,7 +176,7 @@ export default class RaceSummary extends Component {
                             <Col>
                                 <Row>
 
-                                    <Col md={6}>
+                                    {/* <Col md={6}>
                                         <p className="custom-font mb-0 text-muted">ขนาดเสื้อ</p>
                                         <Card style={{ borderColor: '#FA6400', width: 100 }} className="text-center" >
                                             <Card.Body className="p-2" style={{ color: '#FA6400' }}>
@@ -187,10 +188,10 @@ export default class RaceSummary extends Component {
                                                     src={iconshirtactive}
                                                     alt="runex"
                                                 />
-                                                <h6 className="card-text">{item.tickets[0].type}<br></br><small>{item.tickets[0].remark}</small></h6>
+                                                <h6 className="card-text">{item.tickets[0].sizes}<br></br><small>{item.tickets[0].remark}</small></h6>
                                             </Card.Body>
                                         </Card>
-                                    </Col>
+                                    </Col> */}
                                     <Col>
                                         <p className="custom-font mb-0 text-muted">ราคา</p>
                                         <p className="custom-font mb-0" style={{ color: '#FA6400' }}>{item.total_price}</p>
@@ -213,6 +214,8 @@ export default class RaceSummary extends Component {
     }
 
     render () {
+        console.log(this.props)
+        console.log(this.state)
         const { event } = this.props.location.state
         return (
             <div>
@@ -222,7 +225,7 @@ export default class RaceSummary extends Component {
                             <Row>
                                 <Col md={4}>
                                     <Card className="mb-5">
-                                        <Card.Img variant="top" src={event ? IMAGE_URL + event.cover : ''} />
+                                        <Card.Img variant="top" src={event ? event.cover : ''} />
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4">ราคาค่าสมัคร</p>

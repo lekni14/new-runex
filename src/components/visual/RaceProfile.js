@@ -67,11 +67,18 @@ export default class RaceProfile extends Component {
         };
     }
 
-    componentDidMount () {
+    componentDidMount() {
+        history.push('/racesummary');
         // this.getEvent()
         // console.log(this.props)
+        // this.setState({
+        //     products: this.props.products
+        // })
         this.setState({
             event: this.props.event
+        })
+        this.setState({
+            tickets: this.props.tickets
         })
         const { user } = this.state
         if (user.address !== undefined && user.address !== null) {
@@ -158,7 +165,7 @@ export default class RaceProfile extends Component {
     //     }
     // }
 
-    getEvent () {
+    getEvent() {
         const { eventID } = this.props.match.params
         // const { eventID } = this.props.route.match.params
 
@@ -199,11 +206,11 @@ export default class RaceProfile extends Component {
         this.setState({ blood_type: e.target.value })
     }
 
-    selectCountry (val) {
+    selectCountry(val) {
         this.setState({ country: val });
     }
 
-    selectRegion (val) {
+    selectRegion(val) {
         this.setState({ region: val });
     }
 
@@ -269,7 +276,7 @@ export default class RaceProfile extends Component {
         //this.setState({ tumbons: tumbons });
     };
 
-    renderProvinces () {
+    renderProvinces() {
         ThaiAddress.search({ province: "" });
         var arr = [];
         const results = ThaiAddress.provinces;
@@ -288,12 +295,12 @@ export default class RaceProfile extends Component {
     onChangeTicket = (e) => {
         this.props.tickets.map((item, index) => {
             if (item.id === e.target.value) {
-                //console.log(e.target.value)
+                console.log(e.target.value)
                 this.setState({ ticket: item })
                 //this.setState({select_ticket:e.target.value})
                 this.setState({ selectTicket: undefined })
                 this.setState({ productTickets: [] })
-                //console.log(item)
+                console.log(this.state.ticket)
             }
         })
 
@@ -314,7 +321,7 @@ export default class RaceProfile extends Component {
                 ticket: this.state.ticket
             }
             arr.push(item)
-            
+
         } else {
             //products.splice(currentIndex, 1)
             const item = {
@@ -328,7 +335,7 @@ export default class RaceProfile extends Component {
         }
         this.setState({ productTickets: arr })
         this.setState({ reload: !reload })
-        
+
     }
 
     onSelectedProduct = (isDeselect, item, type) => {
@@ -407,11 +414,11 @@ export default class RaceProfile extends Component {
         // return check
     }
 
-    checkProductTicket = (product, type) => {
+    checkProductTicket = (product, size) => {
         const { productTickets } = this.state
         var check = false
         productTickets.map((element) => {
-            if (product.id === element.product.id && element.type === type.name) {
+            if (product.id === element.product.id && element.size === size.name) {
                 check = true
             }
 
@@ -419,7 +426,7 @@ export default class RaceProfile extends Component {
         return check
     }
 
-    showCitycen () {
+    showCitycen() {
         const { citycen_type, citycen_id, passport } = this.state
         if (citycen_type === 'CiticenID') {
             return citycen_id
@@ -428,8 +435,9 @@ export default class RaceProfile extends Component {
         }
     }
 
-    showPrice () {
+    showPrice() {
         const { products, event, ticket, reciept_type } = this.state
+
         var total = 0
         if (event.ticket !== undefined && event.ticket !== null) {
             if (ticket !== undefined) {
@@ -447,7 +455,7 @@ export default class RaceProfile extends Component {
         return total
     }
 
-    isSold (event) {
+    isSold(event) {
         var check = false
         event.product.map(item => {
             if (item.status === 'sold') {
@@ -458,126 +466,138 @@ export default class RaceProfile extends Component {
     }
 
     saveData = () => {
-        var address = {
-            address: this.state.address_no,
-            province: this.state.province,
-            district: this.state.district,
-            city: this.state.city,
-            zipcode: this.state.postcode
-        }
+        console.log(this)
+        history.push('/racesummary');
+        // var address = {
+        //     address: this.state.address_no,
+        //     province: this.state.province,
+        //     district: this.state.district,
+        //     city: this.state.city,
+        //     zipcode: this.state.postcode
+        // }
 
-        var data = this.state.user
-        data.birthdate = utils.convertDateToApi(this.state.birthdateApi)
-        data.phone = this.state.phone
-        data.passport = this.state.passport
-        data.emergency_contact = this.state.emergency_contact
-        data.emergency_phone = this.state.emergency_phone
-        data.gender = this.state.gender
-        data.citycen_id = this.state.citycen_id
-        data.address = [address]
-        data.firstname = this.state.firstname
-        data.lastname = this.state.lastname
-        data.blood_type = this.state.blood_type
-        data.nationality = this.state.country
-        data.fullname = this.state.firstname + ' ' + this.state.lastname
-        userService.updateUser(data).then(response => {
-            console.log(response)
-            if (response.code === 200) {
-                // console.log(response)
-                const { productTickets, ticket, event, products, reciept_type } = this.state
+        // var data = this.state.user
+        // data.birthdate = utils.convertDateToApi(this.state.birthdateApi)
+        // data.phone = this.state.phone
+        // data.passport = this.state.passport
+        // data.emergency_contact = this.state.emergency_contact
+        // data.emergency_phone = this.state.emergency_phone
+        // data.gender = this.state.gender
+        // data.citycen_id = this.state.citycen_id
+        // data.address = [address]
+        // data.firstname = this.state.firstname
+        // data.lastname = this.state.lastname
+        // data.blood_type = this.state.blood_type
+        // data.nationality = this.state.country
+        // data.fullname = this.state.firstname + ' ' + this.state.lastname
+        // // userService.updateUser(data).then(response => {
+        // //     console.log(response)
+        // //     if (response.code === 200) {
+        // const { productTickets, ticket, event, products, reciept_type } = this.state
+        // console.log(productTickets)
+        // if (ticket.id === undefined || ticket.id === null) {
+        //     Swal.fire(
+        //         '',
+        //         'Please select distance.',
+        //         'warning'
+        //     )
+        // } else if (ticket.product != null && productTickets.length === 0) {
+        //     Swal.fire(
+        //         '',
+        //         'Please select shirt size.',
+        //         'warning'
+        //     )
+        // } else  {
+        //     var check = 0
 
-                if (ticket.id === undefined || ticket.id === null) {
-                    Swal.fire(
-                        '',
-                        'Please select distance.',
-                        'warning'
-                    )
-                } else if (ticket.product != null && productTickets.length === 0) {
-                    Swal.fire(
-                        '',
-                        'Please select shirt size.',
-                        'warning'
-                    )
-                } else {
-                    var check = 0
+        //     if (products.length > 0) {
+        //         console.log(products)
+        //         products.map((item) => (
+        //             item.show ? check += 1 : check += 0
+        //         ))
+        //         if (productTickets.length === check) {
+        //             let ticket_options = {
+        //                 user_option: data,
+        //                 product: products,
+        //                 tickets: productTickets,
+        //                 total_price: this.showPrice(),
+        //                 reciept_type: reciept_type
+        //             }
+        //             history.push({
+        //                 pathname: '/racesummary',
+        //                 state: {
+        //                     ticket: productTickets,
+        //                     product: products,
+        //                     event: event,
+        //                     ticket_options: [ticket_options],
+        //                     index: 0
+        //                 }
+        //             })
 
-                    if (ticket.product !== null) {
-                        ticket.product.map((item) => (
-                            item.show ? check += 1 : check += 0
-                        ))
-                        if (productTickets.length === check) {
-                            let ticket_options = {
-                                user_option: data,
-                                product: products,
-                                tickets: productTickets,
-                                total_price: this.showPrice(),
-                                reciept_type: reciept_type
-                            }
-                            history.push({
-                                pathname: '/racesummary',
-                                state: {
-                                    ticket: productTickets,
-                                    product: products,
-                                    event: event,
-                                    ticket_options: [ticket_options],
-                                    index: 0
-                                }
-                            })
+        //         } else {
+        //             Swal.fire(
+        //                 '',
+        //                 'Please select product on ticket.',
+        //                 'warning'
+        //             )
+        //         }
+        //     } else if (ticket.price === 0) {
+        //         console.log(ticket)
+        //         var arr = productTickets
+        //         const item = {
+        //             product: {},
+        //             type: '',
+        //             price: 0.00,
+        //             ticket: ticket
+        //         }
+        //         arr.push(item)
+        //         let ticket_options = {
+        //             user_option: data,
+        //             product: products,
+        //             tickets: arr,
+        //             total_price: this.showPrice(),
+        //             reciept_type: reciept_type
+        //         }
+        //         history.push({
+        //             pathname: '/racesummary',
+        //             state: {
+        //                 ticket: ticket,
+        //                 product: arr,
+        //                 event: event,
+        //                 ticket_options: [ticket_options],
+        //                 index: 0
+        //             }
+        //         })
+        //         // this.setState({ productTickets: arr }, () => {
+                    
+        //         // })
+        //     } else {
+        //         Swal.fire(
+        //             '',
+        //             'ไม่สามารถบันทึกข้อมูลได้',
+        //             'warning'
+        //         )
+        //     }
+        // }
 
-                        } else {
-                            Swal.fire(
-                                '',
-                                'Please select product on ticket.',
-                                'warning'
-                            )
-                        }
-                    } else if (ticket.price === 0) {
-                        var arr = productTickets
-                        const item = {
-                            product: {},
-                            type: '',
-                            price: 0.00,
-                            ticket: ticket
-                        }
-                        arr.push(item)
-                        this.setState({ productTickets: arr }, () => {
-                            let ticket_options = {
-                                user_option: data,
-                                product: products,
-                                tickets: productTickets,
-                                total_price: this.showPrice(),
-                                reciept_type: reciept_type
-                            }
-                            history.push({
-                                pathname: '/racesummary',
-                                state: {
-                                    ticket: ticket,
-                                    product: productTickets,
-                                    event: event,
-                                    ticket_options: ticket_options,
-                                    index: 0
-                                }
-                            })
-                        })
-                    }
-                }
-            } else {
-                Swal.fire(
-                    '',
-                    'ไม่สามารถบันทึกข้อมูลได้',
-                    'warning'
-                )
-            }
-        }, error => {
-            console.log(error)
-        })
+        console.log('not thing')
+        // } else {
+        //     Swal.fire(
+        //         '',
+        //         'ไม่สามารถบันทึกข้อมูลได้',
+        //         'warning'
+        //     )
+        // }
+        // }, error => {
+        //     console.log(error)
+        // })
     }
 
     onClickConfirm = () => {
         this.saveData()
     }
 
-    render () {
+    render() {
 
         const { validated, birthdate, citycen_id, gender, phone, address_no, province, district, postcode, city } = this.state
         const { event, productOnTicketSize, ticket, blood_type, country, emergency_contact, emergency_phone } = this.state
@@ -629,18 +649,7 @@ export default class RaceProfile extends Component {
                                                 <li className="list-group-item px-3 border-0">
                                                     <h6>{event ? utils.convertDateApiToString(event.end_reg) : ''}<small className="ml-1 text-muted"></small></h6>
                                                 </li>
-                                                {/* <li className="list-group-item px-3 border-0">
-                                            <h6>13<small className="ml-1 text-muted">days</small></h6>
-                                        </li>
-                                        <li className="list-group-item px-3 border-0">
-                                            <h6>7<small className="ml-1 text-muted">hours.</small></h6>
-                                        </li>
-                                        <li className="list-group-item px-3 border-0">
-                                            <h6>45<small className="ml-1 text-muted">mins.</small></h6>
-                                        </li>
-                                        <li className="list-group-item px-3 border-0">
-                                            <h6>15<small className="ml-1 text-muted">secs</small></h6>
-                                        </li> */}
+
                                             </ul>
                                         </Card.Footer>
                                     </Card>
@@ -751,22 +760,7 @@ export default class RaceProfile extends Component {
                                                         </Col>
                                                     </Form.Row>
                                                 </Form.Group>
-                                                {/* <Form.Group>
-                                                    <Form.Label>สัญชาติ, Nationality<span className="text-danger">*</span></Form.Label>
-                                                    <Form.Row>
-                                                        <CountryDropdown
-                                                            value={country}
-                                                            onChange={(val) => this.selectCountry(val)}
-                                                            style={{
-                                                                backgroundColor: '#fff',
-                                                                color: '#3b3b3b',
-                                                                fontSize: 16,
-                                                                height: 38
-                                                            }} />
-                                                        <Form.Control.Feedback type="invalid">สัญชาติ, nationality is required!</Form.Control.Feedback>
-                                                    </Form.Row>
 
-                                                </Form.Group> */}
                                                 <Form.Group controlId="formGridAddress">
                                                     <Form.Label>ที่อยู่, Address<span className="text-danger">*</span></Form.Label>
                                                     <Form.Control as="textarea" rows="2" placeholder="" value={address_no} required onChange={e => this.setState({ address_no: e.target.value })} />
@@ -838,7 +832,7 @@ export default class RaceProfile extends Component {
 
                                                 <Form.Group controlId="formTicket">
                                                     <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
-                                                    <select  className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
+                                                    <select className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
                                                         <option value='' key='99'>{this.state.select_ticket}</option>
                                                         {this.props.tickets !== undefined ? this.props.tickets.map((item, index) => (
                                                             <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
@@ -909,16 +903,6 @@ export default class RaceProfile extends Component {
                                                                         </Card>
                                                                     </Col>
                                                                 )) : ''}
-                                                                {/* <Col className="" sm="12" md="2"  key={item.id + '99'}>
-                                            <Card style={{ borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }} 
-                                            className="text-center" >
-                                                <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)'), padding: 1 }}
-                                                    onClick={this.onSelectedProduct.bind(this, true, item, null)}>
-
-                                                    <h6 className="card-text">ไม่ได้เลือก<br></br><small></small></h6>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col> */}
                                                             </Row>
                                                             <Row className="size">
                                                                 <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
@@ -935,42 +919,6 @@ export default class RaceProfile extends Component {
 
                                                         </Form.Group>) : ''
                                                     )) : ''}
-                                                    {/* {event.event ? event.event.product.map((product, index) => (
-                                    <Form.Group key={index}>
-                                        <Row>
-                                            <Col>
-                                                <Media>
-                                                    <img
-                                                        width={64}
-                                                        height={64}
-                                                        className="mr-3"
-                                                        src={product.image ? IMAGE_URL + product.image[0].path_url : ''}
-                                                        alt="Generic placeholder"
-                                                    />
-                                                    <Media.Body>
-                                                        <div className="clearfix">
-                                                            <h6 className="float-left">{product.name}</h6>
-                                                            <h6 className="float-right">Price {product.type[0].price + ' ' + (product.currency !== undefined ? product.currency : 'THB')}</h6>
-                                                        </div>
-                                                        <ul className="list-group list-group-horizontal-lg" style={{ marginBottom: 8, marginRight: 8 }}>
-                                                            {product.type.map((item, index) => (
-                                                                <li key={index} className="list-group-item rounded-pill mr-1 py-1 mt-1"
-                                                                    style={{ borderColor: (productSize === index ? '#FA6400' : 'rgba(0,0,0,0.19)'), color: (productSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)') }}
-                                                                    onClick={this.onSelectedProduct.bind(this, index, product)} >{item.name}</li>
-                                                            ))}
-                                                            
-                                                        </ul>
-                                                        <ul className="list-group list-group-horizontal-lg mt-1">
-                                                            <li  className="list-group-item rounded-pill mr-1 py-1"
-                                                                style={{ borderColor: (productSize === -1 ? '#FA6400' : 'rgba(0,0,0,0.19)'), color: (productSize === -1 ? '#FA6400' : 'rgba(0,0,0,0.75)') }}
-                                                                onClick={this.onSelectedProduct.bind(this, -1, product)} >ไม่ได้เลือก</li>
-                                                        </ul>
-                                                    </Media.Body>
-                                                </Media>
-                                            </Col>
-                                        </Row>
-                                    </Form.Group>
-                                )) : ''} */}
                                                 </Form.Row>
 
                                                 <fieldset>
