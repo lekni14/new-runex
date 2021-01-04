@@ -68,7 +68,6 @@ export default class RaceProfile extends Component {
     }
 
     componentDidMount() {
-        history.push('/racesummary');
         // this.getEvent()
         // console.log(this.props)
         // this.setState({
@@ -467,118 +466,120 @@ export default class RaceProfile extends Component {
 
     saveData = () => {
         console.log(this)
-        history.push('/racesummary');
-        // var address = {
-        //     address: this.state.address_no,
-        //     province: this.state.province,
-        //     district: this.state.district,
-        //     city: this.state.city,
-        //     zipcode: this.state.postcode
-        // }
+        var address = {
+            address: this.state.address_no,
+            province: this.state.province,
+            district: this.state.district,
+            city: this.state.city,
+            zipcode: this.state.postcode
+        }
 
-        // var data = this.state.user
-        // data.birthdate = utils.convertDateToApi(this.state.birthdateApi)
-        // data.phone = this.state.phone
-        // data.passport = this.state.passport
-        // data.emergency_contact = this.state.emergency_contact
-        // data.emergency_phone = this.state.emergency_phone
-        // data.gender = this.state.gender
-        // data.citycen_id = this.state.citycen_id
-        // data.address = [address]
-        // data.firstname = this.state.firstname
-        // data.lastname = this.state.lastname
-        // data.blood_type = this.state.blood_type
-        // data.nationality = this.state.country
-        // data.fullname = this.state.firstname + ' ' + this.state.lastname
-        // // userService.updateUser(data).then(response => {
-        // //     console.log(response)
-        // //     if (response.code === 200) {
-        // const { productTickets, ticket, event, products, reciept_type } = this.state
-        // console.log(productTickets)
-        // if (ticket.id === undefined || ticket.id === null) {
-        //     Swal.fire(
-        //         '',
-        //         'Please select distance.',
-        //         'warning'
-        //     )
-        // } else if (ticket.product != null && productTickets.length === 0) {
-        //     Swal.fire(
-        //         '',
-        //         'Please select shirt size.',
-        //         'warning'
-        //     )
-        // } else  {
-        //     var check = 0
+        var data = this.state.user
+        data.birthdate = utils.convertDateToApi(this.state.birthdateApi)
+        data.phone = this.state.phone
+        data.passport = this.state.passport
+        data.emergency_contact = this.state.emergency_contact
+        data.emergency_phone = this.state.emergency_phone
+        data.gender = this.state.gender
+        data.citycen_id = this.state.citycen_id
+        data.address = [address]
+        data.firstname = this.state.firstname
+        data.lastname = this.state.lastname
+        data.blood_type = this.state.blood_type
+        data.nationality = this.state.country
+        data.fullname = this.state.firstname + ' ' + this.state.lastname
+        // userService.updateUser(data).then(response => {
+        //     console.log(response)
+        //     if (response.code === 200) {
+        const { productTickets, ticket, event, products, reciept_type } = this.state
+        console.log(productTickets)
+        if (ticket.id === undefined || ticket.id === null) {
+            Swal.fire(
+                '',
+                'Please select distance.',
+                'warning'
+            )
+        } else if (ticket.product != null && productTickets.length === 0) {
+            Swal.fire(
+                '',
+                'Please select shirt size.',
+                'warning'
+            )
+        } else  {
+            var check = 0
 
-        //     if (products.length > 0) {
-        //         console.log(products)
-        //         products.map((item) => (
-        //             item.show ? check += 1 : check += 0
-        //         ))
-        //         if (productTickets.length === check) {
-        //             let ticket_options = {
-        //                 user_option: data,
-        //                 product: products,
-        //                 tickets: productTickets,
-        //                 total_price: this.showPrice(),
-        //                 reciept_type: reciept_type
-        //             }
-        //             history.push({
-        //                 pathname: '/racesummary',
-        //                 state: {
-        //                     ticket: productTickets,
-        //                     product: products,
-        //                     event: event,
-        //                     ticket_options: [ticket_options],
-        //                     index: 0
-        //                 }
-        //             })
+            if (products.length > 0) {
+                console.log(products)
+                products.map((item) => (
+                    item.show ? check += 1 : check += 0
+                ))
+                if (productTickets.length === check) {
+                    let ticket_options = {
+                        user_option: data,
+                        product: products,
+                        tickets: productTickets,
+                        total_price: this.showPrice(),
+                        reciept_type: reciept_type
+                    }
+                    history.push({
+                        pathname: '/racesummary',
+                        state: {
+                            ticket: productTickets,
+                            product: products,
+                            event: event,
+                            ticket_options: [ticket_options],
+                            index: 0
+                        }
+                    })
 
-        //         } else {
-        //             Swal.fire(
-        //                 '',
-        //                 'Please select product on ticket.',
-        //                 'warning'
-        //             )
-        //         }
-        //     } else if (ticket.price === 0) {
-        //         console.log(ticket)
-        //         var arr = productTickets
-        //         const item = {
-        //             product: {},
-        //             type: '',
-        //             price: 0.00,
-        //             ticket: ticket
-        //         }
-        //         arr.push(item)
-        //         let ticket_options = {
-        //             user_option: data,
-        //             product: products,
-        //             tickets: arr,
-        //             total_price: this.showPrice(),
-        //             reciept_type: reciept_type
-        //         }
-        //         history.push({
-        //             pathname: '/racesummary',
-        //             state: {
-        //                 ticket: ticket,
-        //                 product: arr,
-        //                 event: event,
-        //                 ticket_options: [ticket_options],
-        //                 index: 0
-        //             }
-        //         })
-        //         // this.setState({ productTickets: arr }, () => {
+                } else {
+                    Swal.fire(
+                        '',
+                        'Please select product on ticket.',
+                        'warning'
+                    )
+                }
+            } else if (ticket.price === 0) {
+                console.log(ticket)
+                var arr = productTickets
+                const item = {
+                    product: {},
+                    type: '',
+                    price: 0.00,
+                    ticket: ticket
+                }
+                arr.push(item)
+                let ticket_options = {
+                    user_option: data,
+                    product: products,
+                    tickets: arr,
+                    total_price: this.showPrice(),
+                    reciept_type: reciept_type
+                }
+                history.push({
+                    pathname: '/racesummary',
+                    state: {
+                        ticket: ticket,
+                        product: arr,
+                        event: event,
+                        ticket_options: [ticket_options],
+                        index: 0
+                    }
+                })
+                history.go()
+
+
+                // this.setState({ productTickets: arr }, () => {
                     
-        //         // })
-        //     } else {
-        //         Swal.fire(
-        //             '',
-        //             'ไม่สามารถบันทึกข้อมูลได้',
-        //             'warning'
-        //         )
-        //     }
-        // }
+                // })
+            } else {
+                Swal.fire(
+                    '',
+                    'ไม่สามารถบันทึกข้อมูลได้',
+                    'warning'
+                )
+            }
+        }
 
         console.log('not thing')
         // } else {

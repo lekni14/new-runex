@@ -14,6 +14,19 @@ export default class RaceRegister extends Component {
     componentDidMount() {
         this.getEvent()
     }
+    componentWillReceiveProps (nextProps) {
+        console.log(nextProps)
+        if (nextProps.event) {
+            const { event } = this.props
+            if (event !== undefined && event !== null) {
+                if (event.event !== null && event.event !== undefined) {
+                    if (event.event.category.id === '5d7dbc800ea2d6053ea1e226') {
+                        this.setState({ isVR: true })
+                    }
+                }
+            }
+        }
+    }
     getEvent() {
         const { slug } = this.props.match.params
         // const { eventID } = this.props.route.match.params
@@ -202,8 +215,8 @@ function Register(props) {
     const {event, tickets, products} = props
     // const {category} = (props.event)?props.event.category:null;
     // console.log(category)
-    if (event.category!=="Virtual Run") {
-        return <Race event={props.event} tickets={props.tickets} products={props.products} />;
-    }
+    // if (event.category!=="Virtual Run") {
+    //     return <Race event={props.event} tickets={props.tickets} products={props.products} />;
+    // }
     return <Visual event={props.event} tickets={props.tickets} products={props.products}/>;
 }

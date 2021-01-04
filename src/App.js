@@ -12,7 +12,7 @@ const RaceSummary = lazy(() => import('./components/visual/RaceSummary'));
 
 function App() {
   return (
-      <Router history={history}>
+      <Router>
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
             <Route exact path="/raceregister/:slug" component={RaceRegister} />

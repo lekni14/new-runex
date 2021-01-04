@@ -10,8 +10,8 @@ import { store } from './store'
 import './style/custom.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-// import ReactGA from 'react-ga'
-// import { GA_ID } from './utils/constants'
+import ReactGA from 'react-ga'
+import { GA_ID } from './utils/constants'
 
 
 function noop() {}
@@ -20,7 +20,7 @@ function noop() {}
 console.warn = noop;
 console.error = noop;
 
-// ReactGA.initialize(GA_ID)
+ReactGA.initialize(GA_ID)
 
 ReactDOM.render(
   <Provider store={store}>
