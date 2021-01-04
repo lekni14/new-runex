@@ -505,7 +505,7 @@ export default class RaceProfile extends Component {
                 'Please select shirt size.',
                 'warning'
             )
-        } else  {
+        } else {
             var check = 0
 
             if (products.length > 0) {
@@ -514,6 +514,7 @@ export default class RaceProfile extends Component {
                     item.show ? check += 1 : check += 0
                 ))
                 if (productTickets.length === check) {
+                    console.log(productTickets)
                     let ticket_options = {
                         user_option: data,
                         product: products,
@@ -521,16 +522,17 @@ export default class RaceProfile extends Component {
                         total_price: this.showPrice(),
                         reciept_type: reciept_type
                     }
-                    history.push({
-                        pathname: '/racesummary',
-                        state: {
-                            ticket: productTickets,
-                            product: products,
-                            event: event,
-                            ticket_options: [ticket_options],
-                            index: 0
-                        }
-                    })
+                    history.push('/summary', productTickets)
+                    // history.push({
+                    //     pathname: '/racesummary',
+                    //     state: {
+                    //         ticket: productTickets,
+                    //         product: products,
+                    //         event: event,
+                    //         ticket_options: [ticket_options],
+                    //         index: 0
+                    //     }
+                    // })
 
                 } else {
                     Swal.fire(
@@ -556,21 +558,41 @@ export default class RaceProfile extends Component {
                     total_price: this.showPrice(),
                     reciept_type: reciept_type
                 }
-                history.push({
-                    pathname: '/racesummary',
-                    state: {
+                // history.push({
+                //     // pathname: '/racesummary',
+                //     state: {
+                //         ticket: ticket,
+                //         product: arr,
+                //         event: event,
+                //         ticket_options: [ticket_options],
+                //         index: 0
+                //     }
+
+                // })
+                history.push('/racesummary', 
+                    {
                         ticket: ticket,
                         product: arr,
                         event: event,
                         ticket_options: [ticket_options],
                         index: 0
                     }
-                })
-                history.go()
+                )
+                // history.go()
+                //     {
+                //         ticket: ticket,
+                //         product: arr,
+                //         event: event,
+                //         ticket_options: [ticket_options],
+                //         index: 0
+                //     }
+                // ,()=>history.go)
+                console.log(history)
+                // history.go()
 
 
                 // this.setState({ productTickets: arr }, () => {
-                    
+
                 // })
             } else {
                 Swal.fire(
