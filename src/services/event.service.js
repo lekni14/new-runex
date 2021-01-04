@@ -22,7 +22,8 @@ export const eventService = {
     getEventsActive,
     updateRegEventWithCreditCard,
     addProduct,
-    getEventInfoBySlug
+    getEventInfoBySlug,
+    getDetail
 }
 async function getEventInfoBySlug (slug) {
     // console.log(slug)
@@ -67,7 +68,6 @@ function getEventsActive () {
         return { code: error.status, msg: "Can not load event" }
     })
 }
-
 async function getEventInfo (eventID) {
     return await axios({
         method: "GET",
@@ -80,6 +80,19 @@ async function getEventInfo (eventID) {
         return { code: 302, status: error.status, msg: "Can not load event" }
     })
 }
+async function getDetail (eventID) {
+    return await axios({
+        method: "GET",
+        url: `${API_URL}/event/detail/dZBVZ`
+    }).then(response => {
+        //console.log(response)
+        return response
+    }).catch(error => {
+        //console.log(error)
+        return { code: 302, status: error.status, msg: "Can not load event" }
+    })
+}
+
 
 async function addEvent (data) {
     const headers = {

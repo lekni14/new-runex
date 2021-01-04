@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container } from 'react-bootstrap'
-import iconmedal from '../../../images/icon-medal.svg'
-import iconshirt from '../../../images/icon-shirt.svg'
-import iconshirtactive from '../../../images/icon-tshirt-active.svg'
+import iconmedal from '../../images/icon-medal.svg'
+import iconshirt from '../../images/icon-shirt.svg'
+import iconshirtactive from '../../images/icon-tshirt-active.svg'
 import ThaiAddress from "react-thai-address";
 // import iconrunning from '../../images/icon-running.svg'
-import iconrunningwhite from '../../../images/icon-running-white.svg'
-import { utils } from '../../../utils/utils'
-import { IMAGE_URL } from '../../../utils/constants'
-import { history } from '../../../store'
+import iconrunningwhite from '../../images/icon-running-white.svg'
+import { utils } from '../../utils/utils'
+import { IMAGE_URL } from '../../utils/constants'
+import { history } from '../../store'
 // import { CountryDropdown } from 'react-country-region-selector'
 import Swal from 'sweetalert2'
 import ReactDatePicker from 'react-datepicker'
@@ -18,7 +18,7 @@ export default class RaceProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(utils.getUser()),
+            user: {},
             fullname: '',
             citycen_id: '',
             passport: '',
@@ -67,8 +67,9 @@ export default class RaceProfile extends Component {
 
     componentDidMount () {
         const { ticket_options, index, event } = this.props.location.state
+        console.log(ticket_options)
         const user = ticket_options[index].user_option
-        const ticket = ticket_options[index].tickets[0].ticket
+        const ticket = ticket_options.ticket
         this.setState({ ticket: ticket })
         this.setState({ event: event })
         this.setState({ reciept_type: ticket_options[index].reciept_type })
@@ -670,10 +671,10 @@ export default class RaceProfile extends Component {
     }
 
     render () {
-
+        console.log(this.props)
         const { validated, birthdate, gender, phone, address_no, province, district, postcode, city } = this.state
-        const { ticket, productOnTicketSize, blood_type, emergency_contact, emergency_phone } = this.state
-        const { event, index } = this.props.location.state
+        const { productOnTicketSize, blood_type, emergency_contact, emergency_phone } = this.state
+        const { event, index ,ticket} = this.props.location.state
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -695,7 +696,7 @@ export default class RaceProfile extends Component {
                             <Row>
                                 <Col md={4}>
                                     <Card className="mb-5">
-                                        <Card.Img variant="top" src={event ? IMAGE_URL + event.cover : ''} />
+                                        <Card.Img variant="top" src={event ? event.cover : ''} />
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }} >ราคาค่าสมัคร</p>
@@ -929,7 +930,7 @@ export default class RaceProfile extends Component {
                                                     <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
                                                     <select value={ticket.id} className="custom-select" onChange={this.onChangeTicket.bind()}>
                                                         <option value='' key='99'>{this.state.select_ticket}</option>
-                                                        {event.ticket !== undefined ? event.ticket.map((item, index) => (
+                                                        {ticket !== undefined ? ticket.map((item, index) => (
                                                             <option value={item.id} key={index}>{item.title + ' ' + item.distance + ' km.'}</option>
                                                         )) : ''}
                                                     </select>
@@ -1069,7 +1070,7 @@ export default class RaceProfile extends Component {
                                                             <Form.Label>รูปแบบการจัดส่ง , Shipping<span className="text-danger">*</span></Form.Label>
                                                             <Form.Check
                                                                 type="radio"
-                                                                label={'รับเสื้อที่หน้างาน ' + event.receive_location}
+                                                                label={'รับเสื้อที่หน้างาน ' + event.title}
                                                                 name="shippingRadios"
                                                                 id="RecieptMyself"
                                                                 checked={this.state.reciept_type === 'yourself'}
@@ -1084,6 +1085,7 @@ export default class RaceProfile extends Component {
                                                                 checked={this.state.reciept_type !== 'yourself'}
                                                                 onClick={() => this.setState({ reciept_type: 'postman' })}
                                                                 onChange={() => console.log('')}
+                                                                style={{ display: event ? (!event.isSendShirtByPost || utils.isAfterDate(event.post_end_date) ? "none" : "block") : 'none' }}
                                                             />
                                                         </Col>
                                                     </Form.Group>

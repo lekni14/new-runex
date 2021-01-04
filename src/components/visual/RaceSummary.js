@@ -19,7 +19,7 @@ export default class RaceSummary extends Component {
         }
     }
 
-    showPrice () {
+    showPrice() {
         const { ticket_options } = this.props.location.state
         console.log(ticket_options)
         var total = 0
@@ -37,13 +37,12 @@ export default class RaceSummary extends Component {
             pathname: '/raceedit',
             state: {
                 ticket: ticket,
-                product: product,
                 event: event,
                 ticket_options: ticket_options,
-                index: index,
-                reciept_type: reciept_type,
+                index: index
             }
         })
+        history.go(0)
     }
 
     onClickAddBtn = () => {
@@ -145,12 +144,13 @@ export default class RaceSummary extends Component {
         }
     }
 
-    showPersonList () {
+    showPersonList() {
         var arr = []
         const { ticket_options } = this.props.location.state
+        console.log(ticket_options)
         if (ticket_options !== undefined) {
             ticket_options.map((item, index) => {
-                
+
                 arr.push(
                     <Card.Body className="border-bottom" key={index}>
                         <h5 className="h5 mb-2">ข้อมูล - ผู้สมัครคนที่ {index + 1}</h5>
@@ -202,7 +202,7 @@ export default class RaceSummary extends Component {
                             </Col>
                             <Col>
                                 <p className="custom-font mb-0 text-muted">ประเภทการวิ่ง</p>
-                                <p className="custom-font mb-0 ">{item.tickets[0].ticket.distance > 0 ? (item.tickets[0].ticket.title +' ' + item.tickets[0].ticket.distance + ' km.') : item.tickets[0].ticket.title }</p>
+                                <p className="custom-font mb-0 ">{item.tickets.distance > 0 ? (item.tickets.title + ' ' + item.tickets.distance + ' km.') : item.tickets.title}</p>
                             </Col>
 
                         </Row>
@@ -213,10 +213,10 @@ export default class RaceSummary extends Component {
         return arr
     }
 
-    render () {
+    render() {
         console.log(this.props)
         console.log(this.state)
-        const { event } = this.props.location.state
+        const { event, ticket, ticket_options } = this.props.location.state
         return (
             <div>
                 <Container className="mt-5" >
@@ -271,7 +271,7 @@ export default class RaceSummary extends Component {
                                     <Card className="px-4 py-3 mb-3">
                                         {this.showPersonList()}
                                         <Card.Body>
-                                            <button type="button" className="btn btn-outline-primary rounded-pill custom-font" onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
+                                            <button type="button" style={{ display: ticket_options[0].tickets.category === 'single' ? "none" : '' }} className="btn btn-outline-primary rounded-pill custom-font" onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
                                             {/* <Button type="submit" className="btn-outline-primary rounded-pill" >
                                         ยืนยัน</Button> */}
                                             {/* modal  */}
