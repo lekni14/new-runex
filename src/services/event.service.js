@@ -83,7 +83,8 @@ async function getEventInfo (eventID) {
 async function getDetail (eventID) {
     return await axios({
         method: "GET",
-        url: `${API_URL}/event/detail/dZBVZ`
+        // url: `${API_URL}/event/detail/${eventID}`
+        url: `https://events-api.runex.co/event/JZXlZ`
     }).then(response => {
         //console.log(response)
         return response

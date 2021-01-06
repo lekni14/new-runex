@@ -633,7 +633,7 @@ export default class RaceProfile extends Component {
         const { validated, birthdate, citycen_id, gender, phone, address_no, province, district, postcode, city } = this.state
         const { productOnTicketSize, ticket, blood_type, country, emergency_contact, emergency_phone } = this.state
         const { event, tickets } = this.props
-        console.log(event)
+        console.log(tickets)
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -866,9 +866,9 @@ export default class RaceProfile extends Component {
                                                     <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
                                                     <select className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
                                                         <option value='' key='99'>{this.state.select_ticket}</option>
-                                                        {tickets !== undefined ? tickets.map((item, index) => (
+                                                        {tickets !== undefined ? tickets !== null ? tickets.map((item, index) => (
                                                             <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
-                                                        )) : ''}
+                                                        )) : '' : ''}
                                                     </select>
                                                 </Form.Group>
                                                 <Form.Label hidden={event.shirts === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>

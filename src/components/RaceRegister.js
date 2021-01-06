@@ -16,12 +16,13 @@ export default class RaceRegister extends Component {
     }
     getEvent() {
         const { slug } = this.props.match.params
+        console.log(slug)
         // const { eventID } = this.props.route.match.params
 
         eventService.getDetail(slug).then(res => {
             console.log(res)
-            if (res.data.code === 200) {
-                const { event, tickets } = res.data.data
+            if (res.status === 200) {
+                const { event, tickets } = res.data
                     
                 this.setState({
                     event: event
@@ -35,7 +36,7 @@ export default class RaceRegister extends Component {
     }
     render() {
         const { event, tickets, products } = this.state 
-        
+        console.log(tickets)
         // if(event.event.category.name === 'Run'){
         //     history.push('/raceregister/'+eventID)
         // }else{
