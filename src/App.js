@@ -46,7 +46,7 @@ import ReactGA from 'react-ga'
 import RaceProfile from './components/RaceRegister'
 // import AddOtherPerson from './component/runex/race/AddOtherPerson'
 import RaceSummary from './components/visual/RaceSummary'
-// import RaceEditProfile from './component/runex/race/RaceEditProfile'
+import RaceEditProfile from './components/visual/RaceEditProfile'
 // import RacePayment from './component/runex/race/RacePayment'
 // import RaceDashboard from './component/runex/race/RaceDashboard'
 // import DashboardOwner from './component/eventer/DashboardOwner'
@@ -129,6 +129,7 @@ class App extends React.Component {
           {/* <Header /> */}
           <Route exact path="/raceregister/:slug" component={RaceProfile} />
           <Route path="/racesummary" component={RaceSummary} />
+          <Route exact path="/raceedit" component={RaceEditProfile} />
           {/* <Route exact path="/home" component={Home} />
           <Route exact path="/" component={HomePage} /> */}
           {/* <Route exact path="/" component={Home} /> */}
@@ -144,7 +145,7 @@ class App extends React.Component {
           
           <PrivateRoute exact path="/racesummary" component={RaceSummary} />
           <PrivateRoute exact path="/racedashboard/:regID" component={RaceDashboard} />
-          <PrivateRoute exact path="/raceedit" component={RaceEditProfile} />
+          
           <PrivateRoute exact path="/addotherperson" component={AddOtherPerson} />
           <PrivateRoute exact path="/racepayment/:regID" component={RacePayment} />
           <PrivateRoute exact path="/homeowner" component={HomeOwner} />

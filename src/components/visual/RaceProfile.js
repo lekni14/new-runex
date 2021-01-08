@@ -69,7 +69,7 @@ export default class RaceProfile extends Component {
 
     componentDidMount() {
         // this.getEvent()
-        // console.log(this.props)
+        console.log(this.props)
         // this.setState({
         //     products: this.props.products
         // })
@@ -306,33 +306,34 @@ export default class RaceProfile extends Component {
 
     }
 
-    onSelectedSize = (size, product, tick) => {
+    onSelectedSize = (shirts) => {
+        console.log(shirts)
         const { productTickets, reload } = this.state
-        var arr = productTickets
-        var currentIndex = this.checkTicketIndex(product)
-        if (currentIndex !== -1) {
-            arr.splice(currentIndex, 1)
-            const item = {
-                product: product,
-                type: size.name,
-                price: size.price,
-                remark: size.remark,
-                ticket: this.state.ticket
-            }
-            arr.push(item)
+        // var arr = productTickets
+        // var currentIndex = this.checkTicketIndex(product)
+        // if (currentIndex !== -1) {
+        //     arr.splice(currentIndex, 1)
+        //     const item = {
+        //         product: product,
+        //         type: size.name,
+        //         price: size.price,
+        //         remark: size.remark,
+        //         ticket: this.state.ticket
+        //     }
+        //     arr.push(item)
 
-        } else {
-            //products.splice(currentIndex, 1)
-            const item = {
-                product: product,
-                type: size.name,
-                price: size.price,
-                remark: size.remark,
-                ticket: this.state.ticket
-            }
-            arr.push(item)
-        }
-        this.setState({ productTickets: arr })
+        // } else {
+        //     //products.splice(currentIndex, 1)
+        //     const item = {
+        //         product: product,
+        //         type: size.name,
+        //         price: size.price,
+        //         remark: size.remark,
+        //         ticket: this.state.ticket
+        //     }
+        //     arr.push(item)
+        // }
+        this.setState({ productTickets: shirts })
         this.setState({ reload: !reload })
 
     }
@@ -413,15 +414,15 @@ export default class RaceProfile extends Component {
         // return check
     }
 
-    checkProductTicket = (product, size) => {
+    checkProductTicket = (shirts) => {
         const { productTickets } = this.state
         var check = false
-        productTickets.map((element) => {
-            if (product.id === element.product.id && element.size === size.name) {
-                check = true
-            }
+        // productTickets.map((element) => {
+        if (shirts.id === productTickets.id) {
+            check = true
+        }
 
-        })
+        // })
         return check
     }
 
@@ -435,28 +436,29 @@ export default class RaceProfile extends Component {
     }
 
     showPrice() {
-        const { products, event, ticket, reciept_type } = this.state
-
+        const { ticket } = this.state
+        const { event, tickets } = this.props
+        console.log(ticket)
         var total = 0
-        if (event.ticket !== undefined && event.ticket !== null) {
-            if (ticket !== undefined) {
-                if (ticket.price !== undefined) {
-                    total = ticket.price
-                    products.map((element) => (
-                        total += element.price
-                    ))
-                }
-            }
-            if (reciept_type === 'postman') {
-                total += 60
-            }
+        // if (event.ticket !== undefined && event.ticket !== null) {
+        // if (ticket !== undefined) {
+        if (ticket.price !== undefined) {
+            total = ticket.price
+            // ticket.map((element) => (
+            //     total += element.price
+            // ))
         }
+        // }
+        if (event.isSendShirtByPost === true) {
+            total += 60
+        }
+        // }
         return total
     }
 
     isSold(event) {
         var check = false
-        event.product.map(item => {
+        event.shirts.map(item => {
             if (item.status === 'sold') {
                 check = true
             }
@@ -506,102 +508,107 @@ export default class RaceProfile extends Component {
                 'warning'
             )
         } else {
-            var check = 0
-
-            if (products.length > 0) {
-                console.log(products)
-                products.map((item) => (
-                    item.show ? check += 1 : check += 0
-                ))
-                if (productTickets.length === check) {
-                    console.log(productTickets)
-                    let ticket_options = {
-                        user_option: data,
-                        product: products,
-                        tickets: productTickets,
-                        total_price: this.showPrice(),
-                        reciept_type: reciept_type
-                    }
-                    history.push('/summary', productTickets)
-                    // history.push({
-                    //     pathname: '/racesummary',
-                    //     state: {
-                    //         ticket: productTickets,
-                    //         product: products,
-                    //         event: event,
-                    //         ticket_options: [ticket_options],
-                    //         index: 0
-                    //     }
-                    // })
-
-                } else {
-                    Swal.fire(
-                        '',
-                        'Please select product on ticket.',
-                        'warning'
-                    )
-                }
-            } else if (ticket.price === 0) {
-                console.log(ticket)
-                var arr = productTickets
-                const item = {
-                    product: {},
-                    type: '',
-                    price: 0.00,
-                    ticket: ticket
-                }
-                arr.push(item)
-                let ticket_options = {
-                    user_option: data,
-                    product: products,
-                    tickets: arr,
-                    total_price: this.showPrice(),
-                    reciept_type: reciept_type
-                }
-                // history.push({
-                //     // pathname: '/racesummary',
-                //     state: {
-                //         ticket: ticket,
-                //         product: arr,
-                //         event: event,
-                //         ticket_options: [ticket_options],
-                //         index: 0
-                //     }
-
-                // })
-                
-                history.push('/racesummary', 
-                    {
-                        ticket: ticket,
-                        product: arr,
-                        event: event,
-                        ticket_options: [ticket_options],
-                        index: 0
-                    }
-                )
-                history.go(0)
-                //     {
-                //         ticket: ticket,
-                //         product: arr,
-                //         event: event,
-                //         ticket_options: [ticket_options],
-                //         index: 0
-                //     }
-                // ,()=>history.go)
-                console.log(history)
-                // history.go()
-
-
-                // this.setState({ productTickets: arr }, () => {
-
-                // })
-            } else {
-                Swal.fire(
-                    '',
-                    'ไม่สามารถบันทึกข้อมูลได้',
-                    'warning'
-                )
+            let ticket_options = {
+                user_option: data,
+                tickets: ticket,
+                total_price: this.showPrice(),
+                reciept_type: reciept_type
             }
+            history.push('/racesummary',
+                {
+                    ticket: this.props.tickets,
+                    event: this.props.event,
+                    ticket_options: [ticket_options],
+                    index: 0
+                }
+            )
+            history.go(0)
+            // var check = 0
+
+            // if (products.length > 0) {
+            //     console.log(products)
+            //     products.map((item) => (
+            //         item.show ? check += 1 : check += 0
+            //     ))
+            //     if (productTickets.length === check) {
+            //         console.log(productTickets)
+            //         let ticket_options = {
+            //             user_option: data,
+            //             product: products,
+            //             tickets: productTickets,
+            //             total_price: this.showPrice(),
+            //             reciept_type: reciept_type
+            //         }
+            //         history.push('/summary', productTickets)
+            //         // history.push({
+            //         //     pathname: '/racesummary',
+            //         //     state: {
+            //         //         ticket: productTickets,
+            //         //         product: products,
+            //         //         event: event,
+            //         //         ticket_options: [ticket_options],
+            //         //         index: 0
+            //         //     }
+            //         // })
+
+            //     } else {
+            //         Swal.fire(
+            //             '',
+            //             'Please select product on ticket.',
+            //             'warning'
+            //         )
+            //     }
+            // } else if (ticket.isFreeEvent === true) {
+            //     console.log(ticket)
+            //     var arr = productTickets
+            //     const item = {
+            //         product: {},
+            //         type: '',
+            //         price: 0.00,
+            //         ticket: ticket
+            //     }
+            //     arr.push(item)
+            //     let ticket_options = {
+            //         user_option: data,
+            //         product: products,
+            //         tickets: arr,
+            //         total_price: this.showPrice(),
+            //         reciept_type: reciept_type
+            //     }
+            // history.push({
+            //     // pathname: '/racesummary',
+            //     state: {
+            //         ticket: ticket,
+            //         product: arr,
+            //         event: event,
+            //         ticket_options: [ticket_options],
+            //         index: 0
+            //     }
+
+            // })
+
+            //     {
+            //         ticket: ticket,
+            //         product: arr,
+            //         event: event,
+            //         ticket_options: [ticket_options],
+            //         index: 0
+            //     }
+            // ,()=>history.go)
+            // console.log(history)
+            // history.go()
+
+
+            // this.setState({ productTickets: arr }, () => {
+
+            // })
+            // } else {
+            //     Swal.fire(
+            //         '',
+            //         'ไม่สามารถบันทึกข้อมูลได้',
+            //         'warning'
+            //     )
+            // }
         }
 
         console.log('not thing')
@@ -624,8 +631,9 @@ export default class RaceProfile extends Component {
     render() {
 
         const { validated, birthdate, citycen_id, gender, phone, address_no, province, district, postcode, city } = this.state
-        const { event, productOnTicketSize, ticket, blood_type, country, emergency_contact, emergency_phone } = this.state
-        console.log(event)
+        const { productOnTicketSize, ticket, blood_type, country, emergency_contact, emergency_phone } = this.state
+        const { event, tickets } = this.props
+        console.log(tickets)
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -647,7 +655,7 @@ export default class RaceProfile extends Component {
                             <Row>
                                 <Col md={4}>
                                     <Card className="mb-5">
-                                        <Card.Img variant="top" src={event ? event.cover : 'dddd'} />
+                                        <Card.Img variant="top" src={event ? event.cover : ''} />
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }} >ราคาค่าสมัคร</p>
@@ -858,45 +866,45 @@ export default class RaceProfile extends Component {
                                                     <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
                                                     <select className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
                                                         <option value='' key='99'>{this.state.select_ticket}</option>
-                                                        {this.props.tickets !== undefined ? this.props.tickets.map((item, index) => (
+                                                        {tickets !== undefined ? tickets !== null ? tickets.map((item, index) => (
                                                             <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
-                                                        )) : ''}
+                                                        )) : '' : ''}
                                                     </select>
                                                 </Form.Group>
-                                                <Form.Label hidden={ticket.product === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>
-                                                {ticket.product ? event.product ? event.product.map((prod, index) => (
-                                                    ticket.product.map((item) => (
-                                                        (item.id === prod.id && item.show) ? (
-                                                            <Form.Group className="mb-5" key={ticket.id + index}>
-                                                                <Form.Label>{prod.name}<span className="text-danger"></span></Form.Label>
-                                                                {/* <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label> */}
-                                                                <Row className="pirate">
-                                                                    {prod.type ? prod.type.map((type, index) => (
-                                                                        <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
-                                                                            <Card style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod, type) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center" >
-                                                                                <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod, type) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
-                                                                                    onClick={this.onSelectedSize.bind(this, type, prod, ticket)}>
+                                                <Form.Label hidden={event.shirts === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>
+                                                {/* {event ? event.shirts ? event.shirts.map((prod, index) => ( 
+                                                    // ticket.product.map((item) => (
+                                                    //     (item.id === prod.id && item.show) ? (1:*/}
+                                                <Form.Group className="mb-5">
+                                                    <Form.Label> <span className="text-danger"></span></Form.Label>
+                                                    {/* <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label> */}
+                                                    <Row className="pirate">
+                                                        {event.shirts ? event.shirts.map((prod, index) => (
+                                                            <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                <Card style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                    <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                        onClick={this.onSelectedSize.bind(this, prod)}>
 
-                                                                                    <img
-                                                                                        width={25}
-                                                                                        height={20}
-                                                                                        className="mr-1"
-                                                                                        src={this.checkProductTicket(prod, type) ? iconshirtactive : iconshirt}
-                                                                                        alt="runex"
-                                                                                    />
-                                                                                    <h6 className="card-text">{type.name}<br></br><small>{type.remark}</small></h6>
-                                                                                </Card.Body>
-                                                                            </Card>
-                                                                        </Col>
-                                                                    )) : ''}
-                                                                </Row>
-                                                            </Form.Group>
-                                                        ) : ''
-                                                    ))
-                                                )) : '' : ''}
+                                                                        <img
+                                                                            width={25}
+                                                                            height={20}
+                                                                            className="mr-1"
+                                                                            src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                            alt="runex"
+                                                                        />
+                                                                        <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                    </Card.Body>
+                                                                </Card>
+                                                            </Col>
+                                                        )) : ''}
+                                                    </Row>
+                                                </Form.Group>
+                                                {/* //     ) : ''
+                                                    // ))
+                                                )) : '' : ''} */}
                                                 <Form.Row>
-                                                    <Form.Label style={{ display: event.product ? (!this.isSold(event) ? "none" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
-                                                    {event.product ? event.product.map((item, index) => (
+                                                    <Form.Label style={{ display: event.shirts ? (!this.isSold(event) ? "none" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
+                                                    {event.shirts ? event.shirts.map((item, index) => (
                                                         item.status === 'sold' ? (<Form.Group className="mb-5" key={index}>
 
                                                             <Form.Label>{item.name}<span className="text-danger"></span></Form.Label>
@@ -913,7 +921,7 @@ export default class RaceProfile extends Component {
                                                                     />
                                                                 </Col>
                                                             </Row>
-                                                            <Row className="size">
+                                                            {/* <Row className="size">
                                                                 {item ? item.type.map((type, index) => (
                                                                     <Col className="col-half-offset" sm="2" md="2" key={item.id + index}>
                                                                         <Card style={{ cursor: 'pointer', borderColor: this.checkProductAndSize(item, type) ? '#FA6400' : 'rgba(0,0,0,0.19)' }}
@@ -927,8 +935,8 @@ export default class RaceProfile extends Component {
                                                                         </Card>
                                                                     </Col>
                                                                 )) : ''}
-                                                            </Row>
-                                                            <Row className="size">
+                                                            </Row> */}
+                                                            {/* <Row className="size">
                                                                 <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
                                                                     <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
                                                                         className="text-center" >
@@ -939,7 +947,7 @@ export default class RaceProfile extends Component {
                                                                         </Card.Body>
                                                                     </Card>
                                                                 </Col>
-                                                            </Row>
+                                                            </Row> */}
 
                                                         </Form.Group>) : ''
                                                     )) : ''}
@@ -952,7 +960,7 @@ export default class RaceProfile extends Component {
                                                             <Form.Label>รูปแบบการจัดส่ง , Shipping<span className="text-danger">*</span></Form.Label>
                                                             <Form.Check
                                                                 type="radio"
-                                                                label={'รับเสื้อที่หน้างาน ' + event.receive_location}
+                                                                label={'รับเสื้อที่หน้างาน ' + event.title}
                                                                 name="shippingRadios"
                                                                 id="RecieptMyself"
                                                                 defaultChecked={true}
@@ -964,7 +972,7 @@ export default class RaceProfile extends Component {
                                                                 name="shippingRadios"
                                                                 id="RecieptPost"
                                                                 onClick={() => this.setState({ reciept_type: 'postman' })}
-                                                                style={{ display: event ? (!event.is_post || utils.isAfterDate(event.post_end_date) ? "none" : "block") : 'none' }}
+                                                                style={{ display: event ? (!event.isSendShirtByPost || utils.isAfterDate(event.post_end_date) ? "none" : "block") : 'none' }}
                                                             />
                                                         </Col>
                                                     </Form.Group>
