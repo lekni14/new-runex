@@ -136,8 +136,10 @@ class Address extends React.Component {
             const { event } = this.props
             if (event !== undefined && event !== null) {
                 if (event !== null && event !== undefined) {
-                    if (event.category.id === 'Virtual Run') {
-                        this.setState({ isVR: true })
+                    if(event.category !== null && event.category !== undefined){
+                        if (event.category.id === 'Virtual Run') {
+                            this.setState({ isVR: true })
+                        }
                     }
                 }
 
@@ -408,7 +410,7 @@ class Address extends React.Component {
                                 <Card.Img variant="top" src={event ?  event.cover : ''} />
                                 <Card.Body>
                                     <h4 className="h4">{event ? event.name : ''}</h4>
-                                    <h1 className="mb-0">{event ? event.ticket[0].price + ' ' + event.ticket[0].currency : ''}</h1>
+                                    <h1 className="mb-0">{event ? event.ticket ? event.ticket[0].price + ' ' + event.ticket[0].currency : '' : ''}</h1>
                                     <p className="text-muted mb-4" style={{ display: event.event ? (event.event.is_free === true ? "none" : "block") : 'none' }}>(including. postage fee)</p>
                                     <Card.Title style={{ display: event.event ? (event.event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
 

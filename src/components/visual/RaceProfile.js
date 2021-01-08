@@ -569,6 +569,7 @@ export default class RaceProfile extends Component {
                 //     }
 
                 // })
+                
                 history.push('/racesummary', 
                     {
                         ticket: ticket,
@@ -578,7 +579,7 @@ export default class RaceProfile extends Component {
                         index: 0
                     }
                 )
-                // history.go()
+                history.go(0)
                 //     {
                 //         ticket: ticket,
                 //         product: arr,

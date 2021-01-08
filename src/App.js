@@ -102,7 +102,7 @@ class App extends React.Component {
 
   render () {
     const { alert } = this.props;
-    const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" ,zIndex:99};
+    //const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" ,zIndex:99};
     if (alert) {
       if(alert.message !== undefined && alert.message !== null){
         this.showAlert(alert.message)
@@ -113,7 +113,7 @@ class App extends React.Component {
       
     }
     return (
-      <Router>
+      <Router history={history}>
         <div>
         <Suspense fallback={<div>Loading...</div>}>
           {/* <div style={style} hidden={!alert.isLoading}>
