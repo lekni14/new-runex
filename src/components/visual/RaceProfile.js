@@ -457,6 +457,7 @@ export default class RaceProfile extends Component {
     }
 
     isSold(event) {
+        console.log(event)
         var check = false
         event.shirts.map(item => {
             if (item.status === 'sold') {
@@ -493,7 +494,8 @@ export default class RaceProfile extends Component {
         // userService.updateUser(data).then(response => {
         //     console.log(response)
         //     if (response.code === 200) {
-        const { productTickets, ticket, event, products, reciept_type } = this.state
+        const { productTickets, ticket, products, reciept_type } = this.state
+        const { event } = this.props
         console.log(productTickets)
         if (ticket.id === undefined || ticket.id === null) {
             Swal.fire(
@@ -501,7 +503,7 @@ export default class RaceProfile extends Component {
                 'Please select distance.',
                 'warning'
             )
-        } else if (ticket.product != null && productTickets.length === 0) {
+        } else if (event.shirts.length != 0 && productTickets.length === 0) {
             Swal.fire(
                 '',
                 'Please select shirt size.',
@@ -646,7 +648,7 @@ export default class RaceProfile extends Component {
             this.setState({ validated: true });
 
         }
-
+        // const rowLen = 12;
         return (
             <div>
                 <Container className="mt-5" >
@@ -879,49 +881,81 @@ export default class RaceProfile extends Component {
                                                     <Form.Label> <span className="text-danger"></span></Form.Label>
                                                     {/* <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label> */}
                                                     <Row className="pirate">
-                                                        {event.shirts ? event.shirts.map((prod, index) => (
-                                                            <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
-                                                                <Card style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
-                                                                    <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
-                                                                        onClick={this.onSelectedSize.bind(this, prod)}>
 
-                                                                        <img
-                                                                            width={25}
-                                                                            height={20}
-                                                                            className="mr-1"
-                                                                            src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
-                                                                            alt="runex"
-                                                                        />
-                                                                        <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
-                                                                    </Card.Body>
-                                                                </Card>
-                                                            </Col>
+                                                        {event.shirts ? event.shirts.map((prod, index) => (
+                                                            (event.shirts.length === index) ? (
+                                                                <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                    <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                        <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                            onClick={this.onSelectedSize.bind(this, prod)}>
+
+                                                                            <img
+                                                                                width={25}
+                                                                                height={20}
+                                                                                className="mr-1"
+                                                                                src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                                alt="runex"
+                                                                            />
+                                                                            <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                </Col>
+                                                            ) : (
+                                                                    <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                        <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                            <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                                onClick={this.onSelectedSize.bind(this, prod)}>
+
+                                                                                <img
+                                                                                    width={25}
+                                                                                    height={20}
+                                                                                    className="mr-1"
+                                                                                    src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                                    alt="runex"
+                                                                                />
+                                                                                <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    </Col>
+                                                                )
                                                         )) : ''}
                                                     </Row>
+                                                    {/* <Row className="size">
+                                                        <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
+                                                            <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
+                                                                className="text-center" >
+                                                                <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)'), padding: 1 }}
+                                                                    onClick={this.onSelectedProduct.bind(this, true, item, null)}>
+
+                                                                    <h6 className="card-text">ไม่ได้เลือก<br></br><small></small></h6>
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </Col>
+                                                    </Row> */}
                                                 </Form.Group>
                                                 {/* //     ) : ''
                                                     // ))
                                                 )) : '' : ''} */}
                                                 <Form.Row>
-                                                    <Form.Label style={{ display: event.shirts ? (!this.isSold(event) ? "none" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
+                                                    <Form.Label style={{ display: event.shirts ? (!this.isSold(event) ? "block" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
                                                     {event.shirts ? event.shirts.map((item, index) => (
-                                                        item.status === 'sold' ? (<Form.Group className="mb-5" key={index}>
-
-                                                            <Form.Label>{item.name}<span className="text-danger"></span></Form.Label>
-                                                            <Form.Label>{item.detail}<span className="text-danger"></span></Form.Label>
-                                                            <Row>
-                                                                <Col>
-                                                                    <img
-                                                                        width={64}
-                                                                        height={64}
-                                                                        className="mr-3"
-                                                                        style={{ marginBottom: 5 }}
-                                                                        src={item.image ? IMAGE_URL + item.image[0].path_url : ''}
-                                                                        alt=""
-                                                                    />
-                                                                </Col>
-                                                            </Row>
-                                                            {/* <Row className="size">
+                                                        item.status === 'sold' ? (
+                                                            <Form.Group className="mb-5" key={index}>
+                                                                {/* <Form.Label>{item.name}<span className="text-danger"></span></Form.Label>
+                                                            <Form.Label>{item.detail}<span className="text-danger"></span></Form.Label> */}
+                                                                <Row>
+                                                                    <Col>
+                                                                        <img
+                                                                            width={64}
+                                                                            height={64}
+                                                                            className="mr-3"
+                                                                            style={{ marginBottom: 5 }}
+                                                                            src={item.image ? item.image[0].path_url : ''}
+                                                                            alt=""
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                                {/* <Row className="size">
                                                                 {item ? item.type.map((type, index) => (
                                                                     <Col className="col-half-offset" sm="2" md="2" key={item.id + index}>
                                                                         <Card style={{ cursor: 'pointer', borderColor: this.checkProductAndSize(item, type) ? '#FA6400' : 'rgba(0,0,0,0.19)' }}
@@ -936,7 +970,7 @@ export default class RaceProfile extends Component {
                                                                     </Col>
                                                                 )) : ''}
                                                             </Row> */}
-                                                            {/* <Row className="size">
+                                                                {/* <Row className="size">
                                                                 <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
                                                                     <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
                                                                         className="text-center" >
@@ -949,7 +983,7 @@ export default class RaceProfile extends Component {
                                                                 </Col>
                                                             </Row> */}
 
-                                                        </Form.Group>) : ''
+                                                            </Form.Group>) : ''
                                                     )) : ''}
                                                 </Form.Row>
 
@@ -977,19 +1011,28 @@ export default class RaceProfile extends Component {
                                                         </Col>
                                                     </Form.Group>
                                                 </fieldset>
-                                                <hr color='#FA6400'></hr>
 
-                                                <Form.Group controlId="formEmergencyContact">
-                                                    <Form.Label>ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact list<span className="text-danger">*</span></Form.Label>
-                                                    <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} required onChange={e => this.setState({ emergency_contact: e.target.value })} />
-                                                    <Form.Control.Feedback type="invalid">ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact is required!</Form.Control.Feedback>
-                                                </Form.Group>
+                                                {/* {if(event.catagory!=="VR")}  */}
+                                                {event.category !== "VR" ?
+                                                    <><hr color='#FA6400'></hr>
+                                                        <Form.Group controlId="formEmergencyContact">
+                                                            <Form.Label>ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact list<span className="text-danger">*</span></Form.Label>
+                                                            {event.category !== "VR" ? <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} required onChange={e => this.setState({ emergency_contact: e.target.value })} /> : <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} onChange={e => this.setState({ emergency_contact: e.target.value })} />}
+                                                            <Form.Control.Feedback type="invalid">ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact is required!</Form.Control.Feedback>
+                                                        </Form.Group>
+                                                        {/* {(event.catagory === "VR" ? required:'')} */}
+                                                        <Form.Group controlId="formEmergencyPhone">
+                                                            <Form.Label>เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number<span className="text-danger">*</span></Form.Label>
+                                                            {event.category !== "VR" ? <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} required onChange={e => this.setState({ emergency_phone: e.target.value })} /> : <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} onChange={e => this.setState({ emergency_phone: e.target.value })} />}
 
-                                                <Form.Group controlId="formEmergencyPhone">
-                                                    <Form.Label>เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number<span className="text-danger">*</span></Form.Label>
-                                                    <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} required onChange={e => this.setState({ emergency_phone: e.target.value })} />
-                                                    <Form.Control.Feedback type="invalid">เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number is required!</Form.Control.Feedback>
-                                                </Form.Group>
+                                                            <Form.Control.Feedback type="invalid">เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number is required!</Form.Control.Feedback>
+                                                        </Form.Group>
+                                                    </>
+                                                    : ""}
+
+
+
+
                                                 <Row className="justify-content-md-center">
                                                     <Col md={"auto"} sm={"auto"}>
                                                         <Button type="submit" className="btn-custom rounded-pill px-4 ml-2" >
