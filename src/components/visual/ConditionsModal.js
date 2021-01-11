@@ -22,7 +22,7 @@ export default class ConditionsModal extends Component {
     render () {
         return (
             <>
-                <Button className="btn-custom rounded-pill px-4 ml-2 custom-font"  onClick={this.handleClickShow.bind(this)}>
+                <Button className="btn-custom rounded-pill px-4 custom-font"  onClick={this.handleClickShow.bind(this)}>
                     ยืนยันการสมัคร
                 </Button>
 

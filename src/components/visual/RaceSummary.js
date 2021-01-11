@@ -46,15 +46,23 @@ export default class RaceSummary extends Component {
     }
 
     onClickAddBtn = () => {
-        const { ticket_options, event } = this.props.location.state
+        const { ticket_options, event, ticket } = this.props.location.state
+        console.log(ticket_options.length+1)
         history.push({
             pathname: '/addotherperson',
             state: {
+                tickets: ticket,
                 event: event,
                 ticket_options: ticket_options,
-                index: ticket_options.lenght + 1,
+                index: ticket_options.length + 1
             }
+            // state: {
+            //     event: event,
+            //     ticket_options: ticket_options,
+            //     index: ticket_options.lenght + 1,
+            // }
         })
+        history.go(0)
     }
 
     onClickConfirm = async (e) => {
@@ -271,7 +279,8 @@ export default class RaceSummary extends Component {
                                     <Card className="px-4 py-3 mb-3">
                                         {this.showPersonList()}
                                         <Card.Body>
-                                            <button type="button" style={{ display: ticket_options[0].tickets.category === 'single' ? "none" : '' }} className="btn btn-outline-primary rounded-pill custom-font" onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
+                                            <button type="button"  className="btn btn-outline-primary rounded-pill custom-font mr-2 " onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
+                                            {/* style={{ display: ticket_options[0].tickets.category === 'single' ? "none" : '' }} */}
                                             {/* <Button type="submit" className="btn-outline-primary rounded-pill" >
                                         ยืนยัน</Button> */}
                                             {/* modal  */}

@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container } from 'react-bootstrap'
-import iconmedal from '../../../images/icon-medal.svg'
-import iconshirt from '../../../images/icon-shirt.svg'
-import iconshirtactive from '../../../images/icon-tshirt-active.svg'
+import iconmedal from '../../images/icon-medal.svg'
+import iconshirt from '../../images/icon-shirt.svg'
+import iconshirtactive from '../../images/icon-tshirt-active.svg'
 import ThaiAddress from "react-thai-address";
 // import iconrunning from '../../images/icon-running.svg'
-import iconrunningwhite from '../../../images/icon-running-white.svg'
-import { utils } from '../../../utils/utils'
-import { IMAGE_URL } from '../../../utils/constants'
-import { history } from '../../../store'
+import iconrunningwhite from '../../images/icon-running-white.svg'
+import { utils } from '../../utils/utils'
+// import { IMAGE_URL } from '../../utils/consta/nts'
+import { history } from '../../store'
 import { CountryDropdown} from 'react-country-region-selector'
 import Swal from 'sweetalert2'
 import ReactDatePicker from 'react-datepicker'
@@ -18,7 +18,7 @@ export default class RaceProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(utils.getUser()),
+            user: {},
             fullname: '',
             citycen_id: '',
             passport: '',
@@ -184,13 +184,13 @@ export default class RaceProfile extends Component {
     }
 
     onChangeTicket = (e) => {
-        const { event } = this.state
-        event.ticket.map((item, index) => {
+        const { tickets } = this.props.location.state
+        tickets.map((item) => {
             if (item.id === e.target.value) {
-                //console.log(e.target.value)
                 this.setState({ ticket: item })
                 //this.setState({select_ticket:e.target.value})
                 this.setState({ selectTicket: undefined })
+                this.setState({ productTickets: [] })
                 //console.log(item)
             }
         })
@@ -198,44 +198,36 @@ export default class RaceProfile extends Component {
 
     }
 
-    onSelectedSize = (size, product, tick) => {
-        // const { reload } = this.state
-        // const data = {
-        //     product: product,
-        //     type: size.name,
-        //     remark: size.remark,
-        //     ticket: this.state.ticket
-        // }
-        // this.setState({ selectTicket: data }, () => {
-        //     //console.log(this.state.selectTicket)
-        // })
-        // this.setState({ reload: !reload })
+    onSelectedSize = (shirts) => {
+        console.log(shirts)
         const { productTickets, reload } = this.state
-        var arr = productTickets
-        var currentIndex = this.checkTicketIndex(product)
-        if (currentIndex !== -1) {
-            arr.splice(currentIndex, 1)
-            const item = {
-                product: product,
-                type: size.name,
-                price: size.price,
-                remark: size.remark,
-                ticket: this.state.ticket
-            }
-            arr.push(item)
-        } else {
-            //products.splice(currentIndex, 1)
-            const item = {
-                product: product,
-                type: size.name,
-                price: size.price,
-                remark: size.remark,
-                ticket: this.state.ticket
-            }
-            arr.push(item)
-        }
-        this.setState({ productTickets: arr })
+        // var arr = productTickets
+        // var currentIndex = this.checkTicketIndex(product)
+        // if (currentIndex !== -1) {
+        //     arr.splice(currentIndex, 1)
+        //     const item = {
+        //         product: product,
+        //         type: size.name,
+        //         price: size.price,
+        //         remark: size.remark,
+        //         ticket: this.state.ticket
+        //     }
+        //     arr.push(item)
+
+        // } else {
+        //     //products.splice(currentIndex, 1)
+        //     const item = {
+        //         product: product,
+        //         type: size.name,
+        //         price: size.price,
+        //         remark: size.remark,
+        //         ticket: this.state.ticket
+        //     }
+        //     arr.push(item)
+        // }
+        this.setState({ productTickets: shirts })
         this.setState({ reload: !reload })
+
     }
 
     onSelectedProduct = (isDeselect, item, type) => {
@@ -312,15 +304,15 @@ export default class RaceProfile extends Component {
         // return check
     }
 
-    checkProductTicket = (product, type) => {
+    checkProductTicket = (shirts) => {
         const { productTickets } = this.state
         var check = false
-        productTickets.map((element) => {
-            if (product.id === element.product.id && element.type === type.name) {
-                check = true
-            }
+        // productTickets.map((element) => {
+        if (shirts.id === productTickets.id) {
+            check = true
+        }
 
-        })
+        // })
         return check
     }
 
@@ -334,7 +326,7 @@ export default class RaceProfile extends Component {
     }
 
     showPrice () {
-        const { products, ticket } = this.state
+        const { products, ticket, reciept_type } = this.state
         const { event } = this.props.location.state
         var total = 0
         if (event.ticket !== undefined && event.ticket !== null) {
@@ -351,6 +343,9 @@ export default class RaceProfile extends Component {
                         total += element.price
                     ))
                 }
+                if (reciept_type === 'postman') {
+                    total += 60
+                }
             }
         }
         // if (total === 0) {
@@ -359,9 +354,10 @@ export default class RaceProfile extends Component {
         return total
     }
 
-    isSold (event) {
+    isSold(event) {
+        console.log(event)
         var check = false
-        event.product.map(item => {
+        event.shirts.map(item => {
             if (item.status === 'sold') {
                 check = true
             }
@@ -481,8 +477,9 @@ export default class RaceProfile extends Component {
     render () {
 
         const { validated, birthdate, gender, phone, address_no, province, district, postcode, city } = this.state
-        const { ticket, productOnTicketSize, blood_type, country, emergency_contact, emergency_phone } = this.state
-        const { event, index } = this.props.location.state
+        const { blood_type, country, emergency_contact, emergency_phone, ticket } = this.state
+        const { event, index, tickets } = this.props.location.state
+        console.log(this.props.location.state)
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -504,7 +501,7 @@ export default class RaceProfile extends Component {
                             <Row>
                                 <Col md={4}>
                                     <Card className="mb-5">
-                                        <Card.Img variant="top" src={event ? IMAGE_URL + event.cover : ''} />
+                                        <Card.Img variant="top" src={event ?  event.cover : ''} />
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }} >ราคาค่าสมัคร</p>
@@ -655,7 +652,7 @@ export default class RaceProfile extends Component {
                                                 <Form.Group>
                                                     <Form.Label>สัญชาติ, Nationality<span className="text-danger">*</span></Form.Label>
                                                     <Form.Row>
-                                                        <CountryDropdown
+                                                        <CountryDropdown className="form-control"
                                                             value={country}
                                                             onChange={(val) => this.selectCountry(val)}
                                                             style={{
@@ -736,64 +733,96 @@ export default class RaceProfile extends Component {
 
                                                 <Form.Group controlId="formTicket">
                                                     <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
-                                                    <select value={ticket.id} className="custom-select" onChange={this.onChangeTicket.bind()}>
+                                                    <select className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
                                                         <option value='' key='99'>{this.state.select_ticket}</option>
-                                                        {event.ticket !== undefined ? event.ticket.map((item, index) => (
-                                                            <option value={item.id} key={index}>{item.title + ' ' + item.distance + ' km.'}</option>
-                                                        )) : ''}
+                                                        {tickets !== undefined ? tickets !== null ? tickets.map((item, index) => (
+                                                            <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
+                                                        )) : '' : ''}
                                                     </select>
                                                 </Form.Group>
-                                                <Form.Label hidden={ticket.product === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>
-                                                {ticket.product ? event.product ? event.product.map((prod, index) => (
-                                                    ticket.product.map((item) => (
-                                                        (item.id === prod.id && item.show) ? (
-                                                            <Form.Group className="mb-5" key={ticket.id + index}>
-                                                                <Form.Label>{prod.name}<span className="text-danger"></span></Form.Label>
-                                                                <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label>
-                                                                <Row className="pirate">
-                                                                    {prod.type ? prod.type.map((type, index) => (
-                                                                        <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
-                                                                            <Card style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod, type) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center" >
-                                                                                <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod, type) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
-                                                                                    onClick={this.onSelectedSize.bind(this, type, prod, ticket)}>
+                                                <Form.Label hidden={event.shirts === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>
+                                                {/* {event ? event.shirts ? event.shirts.map((prod, index) => ( 
+                                                    // ticket.product.map((item) => (
+                                                    //     (item.id === prod.id && item.show) ? (1:*/}
+                                                <Form.Group className="mb-5">
+                                                    <Form.Label> <span className="text-danger"></span></Form.Label>
+                                                    {/* <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label> */}
+                                                    <Row className="pirate">
 
-                                                                                    <img
-                                                                                        width={25}
-                                                                                        height={20}
-                                                                                        className="mr-1"
-                                                                                        src={this.checkProductTicket(prod, type) ? iconshirtactive : iconshirt}
-                                                                                        alt="runex"
-                                                                                    />
-                                                                                    <h6 className="card-text">{type.name}<br></br><small>{type.remark}</small></h6>
-                                                                                </Card.Body>
-                                                                            </Card>
-                                                                        </Col>
-                                                                    )) : ''}
-                                                                </Row>
-                                                            </Form.Group>
-                                                        ) : ''
-                                                    ))
-                                                )) : '' : ''}
-                                                <Form.Row>
-                                                    <Form.Label style={{ display: event.product ? (!this.isSold(event) ? "none" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
-                                                    {event.product ? event.product.map((item, index) => (
-                                                        item.status === 'sold' ? (<Form.Group className="mb-5" key={index}>
+                                                        {event.shirts ? event.shirts.map((prod, index) => (
+                                                            (event.shirts.length === index) ? (
+                                                                <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                    <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                        <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                            onClick={this.onSelectedSize.bind(this, prod)}>
 
-                                                            <Form.Label>{item.name}<span className="text-danger"></span></Form.Label>
-                                                            <Form.Label>{item.detail}<span className="text-danger"></span></Form.Label>
-                                                            <Row>
-                                                                <Col>
-                                                                    <img
-                                                                        width={64}
-                                                                        height={64}
-                                                                        className="mr-3"
-                                                                        style={{ marginBottom: 5 }}
-                                                                        src={item.image ? IMAGE_URL + item.image[0].path_url : ''}
-                                                                        alt=""
-                                                                    />
+                                                                            <img
+                                                                                width={25}
+                                                                                height={20}
+                                                                                className="mr-1"
+                                                                                src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                                alt="runex"
+                                                                            />
+                                                                            <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                        </Card.Body>
+                                                                    </Card>
                                                                 </Col>
-                                                            </Row>
-                                                            <Row className="size">
+                                                            ) : (
+                                                                    <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                        <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                            <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                                onClick={this.onSelectedSize.bind(this, prod)}>
+
+                                                                                <img
+                                                                                    width={25}
+                                                                                    height={20}
+                                                                                    className="mr-1"
+                                                                                    src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                                    alt="runex"
+                                                                                />
+                                                                                <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    </Col>
+                                                                )
+                                                        )) : ''}
+                                                    </Row>
+                                                    {/* <Row className="size">
+                                                        <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
+                                                            <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
+                                                                className="text-center" >
+                                                                <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)'), padding: 1 }}
+                                                                    onClick={this.onSelectedProduct.bind(this, true, item, null)}>
+
+                                                                    <h6 className="card-text">ไม่ได้เลือก<br></br><small></small></h6>
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </Col>
+                                                    </Row> */}
+                                                </Form.Group>
+                                                {/* //     ) : ''
+                                                    // ))
+                                                )) : '' : ''} */}
+                                                <Form.Row>
+                                                    <Form.Label style={{ display: event.shirts ? (!this.isSold(event) ? "block" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
+                                                    {event.shirts ? event.shirts.map((item, index) => (
+                                                        item.status === 'sold' ? (
+                                                            <Form.Group className="mb-5" key={index}>
+                                                                {/* <Form.Label>{item.name}<span className="text-danger"></span></Form.Label>
+                                                            <Form.Label>{item.detail}<span className="text-danger"></span></Form.Label> */}
+                                                                <Row>
+                                                                    <Col>
+                                                                        <img
+                                                                            width={64}
+                                                                            height={64}
+                                                                            className="mr-3"
+                                                                            style={{ marginBottom: 5 }}
+                                                                            src={item.image ? item.image[0].path_url : ''}
+                                                                            alt=""
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                                {/* <Row className="size">
                                                                 {item ? item.type.map((type, index) => (
                                                                     <Col className="col-half-offset" sm="2" md="2" key={item.id + index}>
                                                                         <Card style={{ cursor: 'pointer', borderColor: this.checkProductAndSize(item, type) ? '#FA6400' : 'rgba(0,0,0,0.19)' }}
@@ -807,18 +836,8 @@ export default class RaceProfile extends Component {
                                                                         </Card>
                                                                     </Col>
                                                                 )) : ''}
-                                                                {/* <Col className="" sm="12" md="2"  key={item.id + '99'}>
-                                            <Card style={{ borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }} 
-                                            className="text-center" >
-                                                <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)'), padding: 1 }}
-                                                    onClick={this.onSelectedProduct.bind(this, true, item, null)}>
-
-                                                    <h6 className="card-text">ไม่ได้เลือก<br></br><small></small></h6>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col> */}
-                                                            </Row>
-                                                            <Row className="size">
+                                                            </Row> */}
+                                                                {/* <Row className="size">
                                                                 <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
                                                                     <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
                                                                         className="text-center" >
@@ -829,46 +848,10 @@ export default class RaceProfile extends Component {
                                                                         </Card.Body>
                                                                     </Card>
                                                                 </Col>
-                                                            </Row>
+                                                            </Row> */}
 
-                                                        </Form.Group>) : ''
+                                                            </Form.Group>) : ''
                                                     )) : ''}
-                                                    {/* {event.event ? event.event.product.map((product, index) => (
-                                    <Form.Group key={index}>
-                                        <Row>
-                                            <Col>
-                                                <Media>
-                                                    <img
-                                                        width={64}
-                                                        height={64}
-                                                        className="mr-3"
-                                                        src={product.image ? IMAGE_URL + product.image[0].path_url : ''}
-                                                        alt="Generic placeholder"
-                                                    />
-                                                    <Media.Body>
-                                                        <div className="clearfix">
-                                                            <h6 className="float-left">{product.name}</h6>
-                                                            <h6 className="float-right">Price {product.type[0].price + ' ' + (product.currency !== undefined ? product.currency : 'THB')}</h6>
-                                                        </div>
-                                                        <ul className="list-group list-group-horizontal-lg" style={{ marginBottom: 8, marginRight: 8 }}>
-                                                            {product.type.map((item, index) => (
-                                                                <li key={index} className="list-group-item rounded-pill mr-1 py-1 mt-1"
-                                                                    style={{ borderColor: (productSize === index ? '#FA6400' : 'rgba(0,0,0,0.19)'), color: (productSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)') }}
-                                                                    onClick={this.onSelectedProduct.bind(this, index, product)} >{item.name}</li>
-                                                            ))}
-                                                            
-                                                        </ul>
-                                                        <ul className="list-group list-group-horizontal-lg mt-1">
-                                                            <li  className="list-group-item rounded-pill mr-1 py-1"
-                                                                style={{ borderColor: (productSize === -1 ? '#FA6400' : 'rgba(0,0,0,0.19)'), color: (productSize === -1 ? '#FA6400' : 'rgba(0,0,0,0.75)') }}
-                                                                onClick={this.onSelectedProduct.bind(this, -1, product)} >ไม่ได้เลือก</li>
-                                                        </ul>
-                                                    </Media.Body>
-                                                </Media>
-                                            </Col>
-                                        </Row>
-                                    </Form.Group>
-                                )) : ''} */}
                                                 </Form.Row>
 
                                                 <fieldset>
@@ -878,21 +861,19 @@ export default class RaceProfile extends Component {
                                                             <Form.Label>รูปแบบการจัดส่ง , Shipping<span className="text-danger">*</span></Form.Label>
                                                             <Form.Check
                                                                 type="radio"
-                                                                label={'รับเสื้อที่หน้างาน ' + event.receive_location}
+                                                                label={'รับเสื้อที่หน้างาน ' + event.title}
                                                                 name="shippingRadios"
                                                                 id="RecieptMyself"
-                                                                checked={this.state.reciept_type === 'yourself'}
+                                                                defaultChecked={true}
                                                                 onClick={() => this.setState({ reciept_type: 'yourself' })}
-                                                                onChange={() => console.log('')}
                                                             />
                                                             <Form.Check
                                                                 type="radio"
                                                                 label='รับเสื้อทางไปรษณีย์ (ค่าจัดส่ง 60  บาท)'
                                                                 name="shippingRadios"
                                                                 id="RecieptPost"
-                                                                checked={this.state.reciept_type !== 'yourself'}
                                                                 onClick={() => this.setState({ reciept_type: 'postman' })}
-                                                                onChange={() => console.log('')}
+                                                                style={{ display: event ? (!event.isSendShirtByPost || utils.isAfterDate(event.post_end_date) ? "none" : "block") : 'none' }}
                                                             />
                                                         </Col>
                                                     </Form.Group>
