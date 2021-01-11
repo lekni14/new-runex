@@ -44,7 +44,7 @@ import ReactGA from 'react-ga'
 // import RefundPolicy from './component/RefundPolicy'
 // import Dashboard from './component/runex/Dashboard'
 import RaceProfile from './components/RaceRegister'
-// import AddOtherPerson from './component/runex/race/AddOtherPerson'
+import AddOtherPerson from './components/visual/AddOtherPerson'
 import RaceSummary from './components/visual/RaceSummary'
 import RaceEditProfile from './components/visual/RaceEditProfile'
 // import RacePayment from './component/runex/race/RacePayment'
@@ -130,6 +130,7 @@ class App extends React.Component {
           <Route exact path="/raceregister/:slug" component={RaceProfile} />
           <Route path="/racesummary" component={RaceSummary} />
           <Route exact path="/raceedit" component={RaceEditProfile} />
+          <Route exact path="/addotherperson" component={AddOtherPerson} />
           {/* <Route exact path="/home" component={Home} />
           <Route exact path="/" component={HomePage} /> */}
           {/* <Route exact path="/" component={Home} /> */}
