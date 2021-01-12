@@ -6,8 +6,8 @@ import { alertActions } from './actions'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import AllEvent from './component/event/AllEvent'
 // import { EventDetail } from './component/event'
-// import Header from './component/Header'
-// import Footer from './component/Footer'
+import Header from './components/Header'
+import Footer from './components/Footer'
 import Swal from 'sweetalert2'
 // import Home from './component/Home'
 // import { PrivateRoute } from './route'
@@ -126,11 +126,12 @@ class App extends React.Component {
               style = {{flex:1, alignSelf:'center'}}
             />
           </div> */}
-          {/* <Header /> */}
+          <Header />
           <Route exact path="/raceregister/:slug" component={RaceProfile} />
           <Route path="/racesummary" component={RaceSummary} />
           <Route exact path="/raceedit" component={RaceEditProfile} />
           <Route exact path="/addotherperson" component={AddOtherPerson} />
+          <Footer/>
           {/* <Route exact path="/home" component={Home} />
           <Route exact path="/" component={HomePage} /> */}
           {/* <Route exact path="/" component={Home} /> */}
@@ -197,7 +198,7 @@ class App extends React.Component {
             />
           </span>
         </BackToTop> */}
-        {/* <Footer/> */}
+       
       </Router>
       // </div>
     )
