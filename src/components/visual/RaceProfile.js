@@ -651,7 +651,7 @@ export default class RaceProfile extends Component {
         // const rowLen = 12;
         return (
             <div>
-                <Container className="mt-5" >
+                <Container className="my-5" >
                     <Card >
                         <Card.Body>
                             <Row>
