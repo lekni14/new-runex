@@ -44,6 +44,7 @@ import ReactGA from 'react-ga'
 // import RefundPolicy from './component/RefundPolicy'
 // import Dashboard from './component/runex/Dashboard'
 import RaceProfile from './components/RaceRegister'
+import Login from './components/Login'
 import AddOtherPerson from './components/regrace/AddOtherPerson'
 import RaceSummary from './components/regrace/RaceSummary'
 import RaceEditProfile from './components/regrace/RaceEditProfile'
@@ -114,7 +115,7 @@ class App extends React.Component {
     }
     return (
       <Router>
-        <div>
+        
         <Suspense fallback={<div>Loading...</div>}>
           {/* <div style={style} hidden={!alert.isLoading}>
             <BounceLoader
@@ -127,10 +128,13 @@ class App extends React.Component {
             />
           </div> */}
           <Header />
+          <div id="content-wrap">
+          <Route exact path="/login" component={Login} />
           <Route exact path="/raceregister/:slug" component={RaceProfile} />
           <Route path="/racesummary" component={RaceSummary} />
           <Route exact path="/raceedit" component={RaceEditProfile} />
           <Route exact path="/addotherperson" component={AddOtherPerson} />
+          </div>
           <Footer/>
           {/* <Route exact path="/home" component={Home} />
           <Route exact path="/" component={HomePage} /> */}
@@ -182,7 +186,7 @@ class App extends React.Component {
           {/* <Route path="/login" component={LoginPage} />
              */}
            </Suspense> 
-        </div>
+        
         {/* <BackToTop
           showOnScrollUp
           showAt={100}
