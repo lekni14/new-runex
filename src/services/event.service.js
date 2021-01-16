@@ -47,7 +47,7 @@ function getEvents () {
         url: `${API_URL}/event/all`
     }).then(response => {
         alertActions.error(alertConstants.SUCCESS)
-        return response
+        return response.data
     }).catch(error => {
         alertActions.error(alertConstants.ERROR)
         return { code: error.status, msg: "Can not load event" }

@@ -39,11 +39,13 @@ import Swal from 'sweetalert2'
 // import RunnnigTheDataAnalysis from './component/RunnnigTheDataAnalysis'
 // import { PageLogin, PageRegister, ResetPassword } from './component/auth'
 import ReactGA from 'react-ga'
+import Callback from './components/callback'
 // import PaymentInform from './component/PaymentInform'
 // import TermsAndCondition from './component/TermsAndCondition'
 // import RefundPolicy from './component/RefundPolicy'
 // import Dashboard from './component/runex/Dashboard'
 import RaceProfile from './components/RaceRegister'
+import Home from './components/Home'
 import Login from './components/Login'
 import AddOtherPerson from './components/regrace/AddOtherPerson'
 import RaceSummary from './components/regrace/RaceSummary'
@@ -129,7 +131,10 @@ class App extends React.Component {
           </div> */}
           <Header />
           <div id="content-wrap">
+          
           <Route exact path="/login" component={Login} />
+          <Route exact path="/callback" component={Callback} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/raceregister/:slug" component={RaceProfile} />
           <Route path="/racesummary" component={RaceSummary} />
           <Route exact path="/raceedit" component={RaceEditProfile} />
