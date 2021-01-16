@@ -39,17 +39,17 @@ import Swal from 'sweetalert2'
 // import RunnnigTheDataAnalysis from './component/RunnnigTheDataAnalysis'
 // import { PageLogin, PageRegister, ResetPassword } from './component/auth'
 import ReactGA from 'react-ga'
+import Callback from './components/callback'
 // import PaymentInform from './component/PaymentInform'
 // import TermsAndCondition from './component/TermsAndCondition'
 // import RefundPolicy from './component/RefundPolicy'
 // import Dashboard from './component/runex/Dashboard'
 import RaceProfile from './components/RaceRegister'
-import AddOtherPerson from './components/visual/AddOtherPerson'
-import RaceSummary from './components/visual/RaceSummary'
-import RaceEditProfile from './components/visual/RaceEditProfile'
-// import RacePayment from './component/runex/race/RacePayment'
-// import RaceDashboard from './component/runex/race/RaceDashboard'
-// import DashboardOwner from './component/eventer/DashboardOwner'
+import Home from './components/Home'
+import Login from './components/Login'
+import AddOtherPerson from './components/regrace/AddOtherPerson'
+import RaceSummary from './components/regrace/RaceSummary'
+import RaceEditProfile from './components/regrace/RaceEditProfile'
 // import RaceHistory from './component/eventer/RaceHistory'
 // import ListName from './component/event/ListName'
 // import Carousel from './component/Carousel'
@@ -114,7 +114,6 @@ class App extends React.Component {
     }
     return (
       <Router history={history}>
-        <div>
         <Suspense fallback={<div>Loading...</div>}>
           {/* <div style={style} hidden={!alert.isLoading}>
             <BounceLoader
@@ -127,10 +126,16 @@ class App extends React.Component {
             />
           </div> */}
           <Header />
+          <div id="content-wrap">
+          
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/callback" component={Callback} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/raceregister/:slug" component={RaceProfile} />
           <Route path="/racesummary" component={RaceSummary} />
           <Route exact path="/raceedit" component={RaceEditProfile} />
           <Route exact path="/addotherperson" component={AddOtherPerson} />
+          </div>
           <Footer/>
           {/* <Route exact path="/home" component={Home} />
           <Route exact path="/" component={HomePage} /> */}
@@ -182,7 +187,7 @@ class App extends React.Component {
           {/* <Route path="/login" component={LoginPage} />
              */}
            </Suspense> 
-        </div>
+        
         {/* <BackToTop
           showOnScrollUp
           showAt={100}
@@ -200,7 +205,6 @@ class App extends React.Component {
         </BackToTop> */}
        
       </Router>
-      // </div>
     )
   }
 }

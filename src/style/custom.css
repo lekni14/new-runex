@@ -42,6 +42,22 @@ h6,
   font-family: "Prompt", sans-serif;
 }
 
+#root {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 200px;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 200px;           /*  Footer height */
+}
+
 .navbar-expand-md .navbar-nav .nav-link {
   font-family: "Prompt", sans-serif;
 }
@@ -226,6 +242,9 @@ h6,
 .card-upload {
   min-height: 200px;
 }
+.card-signin{
+  background-color: #222222;
+}
 .upload-btn-wrapper {
   position: relative;
   overflow: hidden;
@@ -301,10 +320,10 @@ figure img.portrait {
 }
 
 /* new 29/9/62  */
-.size .card {
+/* .size .card { */
   /* min-height: 60px */
   /* padding-left: 15px */
-}
+/* } */
 
 /* Main Layout  */
 .main-content.container {
@@ -556,9 +575,9 @@ a .card-title {
   .nav-step .finish {
     display: none;
   }
-  .nav-step .nav-link {
+  /* .nav-step .nav-link { */
     /* padding: 0px; */
-  }
+  /* } */
   .card.mb-2,
   .mb-5.card {
     border: none;

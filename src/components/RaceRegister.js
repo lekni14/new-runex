@@ -48,7 +48,7 @@ export default class RaceRegister extends Component {
     }
 }
 const Race = React.lazy(() => import('./race/Register'));
-const Visual = React.lazy(() => import('./visual/RaceProfile'));
+const Visual = React.lazy(() => import('./regrace/RaceProfile'));
 function Register(props) {
     const {event, tickets, products} = props
     // const {category} = (props.event)?props.event.category:null;
