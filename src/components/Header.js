@@ -3,9 +3,6 @@ import React, { Component } from 'react'
 import { Navbar, Image, Nav, NavDropdown } from 'react-bootstrap'
 //import logo from '../images/runex-logo.png'
 import logo from '../images/logo-runex.png'
-// import { Signin } from './auth'
-import { userActions } from '../actions'
-import { connect } from 'react-redux';
 import { history } from '../store'
 import iconuser from '../images/icon-user.svg'
 import { userService } from '../services'
@@ -63,39 +60,36 @@ export default class Header extends Component {
   }
   render() {
     const { user } = this.state
-    console.log(user)
-    console.log(user.email)
     const classnone = this.state.navbarcollapse ? "collapse navbar-collapse" : "collapse"
-    console.log(process.env)
     return (
 
       <header id="header" className="shadow-sm p-1 bg-white rounded" hidden={history.location.pathname === '/login'}>
-        <Navbar bg="white" variant="light" bg="white" expand="md" style={{ minHeight: '80' }} className="container-fluid">
+        <Navbar bg="white" variant="light" expand="md" style={{ minHeight: '80' }} className="container-fluid">
           {/* <div className="col-md-10 col-12 offset-md-1"> */}
-            <Navbar.Brand href="/">
-              <img
-                src={logo}
-                height="48"
-                className="d-inline-block align-top"
-                alt="Runex logo"
-              />
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                
-              </Nav>
-              <Signin/>
-              {/* <Nav.Link href="login" style={{ color: '#121314' }}>เข้าสู่ระบบ/ลงทะเบียน</Nav.Link> */}
-              {/* <Nav.Link onClick={this.handleShow} style={{ color: '#121314' }} >เข้าสู่ระบบ/ลงทะเบียน</Nav.Link> */}
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+          <Navbar.Brand href="/">
+            <img
+              src={logo}
+              height="48"
+              className="d-inline-block align-top"
+              alt="Runex logo"
+            />
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+
+            </Nav>
+            <Signin />
+            {/* <Nav.Link href="login" style={{ color: '#121314' }}>เข้าสู่ระบบ/ลงทะเบียน</Nav.Link> */}
+            {/* <Nav.Link onClick={this.handleShow} style={{ color: '#121314' }} >เข้าสู่ระบบ/ลงทะเบียน</Nav.Link> */}
+            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-              </NavDropdown>
-            </Navbar.Collapse>
+              </NavDropdown>*/}
+          </Navbar.Collapse>
           {/* </div> */}
 
         </Navbar>
@@ -140,23 +134,3 @@ export default class Header extends Component {
     )
   }
 }
-
-function mapState(state) {
-  const { loggingIn, user } = state.authentication;
-  return { loggingIn, user };
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  login: userActions.login,
-  logout: () => dispatch(userActions.logout),
-});
-
-const actionCreators = (dispatch) => {
-  return {
-    login: userActions.login,
-    logout: userActions.logout,
-  }
-};
-
-const connectedHeader = connect(mapState, actionCreators)(Header);
-export { connectedHeader as Header };

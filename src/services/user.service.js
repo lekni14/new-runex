@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import { API_URL } from '../utils/constants'
+import { api, API_URL } from '../utils/constants'
 import { authHeader, headers } from '../utils/auth-header'
 import axios from 'axios'
 import { history } from '../store'
 import Resizer from 'react-image-file-resizer'
 import { utils } from '../utils/utils'
+import { service } from './service'
 
 
 export const userService = {
@@ -26,14 +27,13 @@ export const userService = {
   changePass
 }
 
-function login (data) {
+function login(data) {
   return axios({
     headers: headers,
     method: 'POST',
     url: API_URL + '/user/login',
     data: data
   }).then(response => {
-    console.log(response.data.token)
     utils.setToken(response.data.token)
     return response
   }).catch(error => {
@@ -42,47 +42,16 @@ function login (data) {
   })
 }
 
-function getUser (token) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + token
-  }
-  return axios({
-    headers: headers,
-    method: 'GET',
-    withCredentials: false,
-    url: API_URL + '/user',
-  }).then(response => {
-    if (response.status === 200) {
-      utils.setUser(response.data.data)
-    }
-    return response
-  }).catch(error => {
-    console.log(error)
-  })
+async function getUser() {
+  return service.call('GET', {}, api.GET_USER)
 }
 
-function logout () {
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + utils.getToken()
-  }
-  return axios({
-    headers: headers,
-    method: 'GET',
-    withCredentials: false,
-    url: API_URL + '/user/logout',
-  }).then(response => {
-    if (response.status === 200) {
-      utils.removeUser()
-      utils.removeToken()
-      history.push('/')
-    }
-    return response
-  }).catch(error => {
-  })
-  // remove user from local storage to log user out
+async function logout() {
+  return service.call('GET', {}, api.LOGOUT)
+}
 
+async function updateUser(user) {
+  return service.call('PUT', user, api.USERUPDATE)
 }
 
 // function getAll() {
@@ -156,29 +125,6 @@ function confirmUser (token) {
     return response
   }).catch(error => {
     console.log(error)
-  })
-}
-
-function updateUser (user) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + utils.getToken()
-  }
-  return axios({
-    headers: headers,
-    method: 'PUT',
-    withCredentials: false,
-    url: API_URL + '/user',
-    data: user
-  }).then(response => {
-    console.log(response)
-    if (response.status === 200) {
-      sessionStorage.setItem('user', JSON.stringify(user))
-    }
-    return response
-  }).catch(error => {
-    console.log(error)
-    return error
   })
 }
 

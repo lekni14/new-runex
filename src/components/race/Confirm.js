@@ -8,9 +8,6 @@ import logoBank1 from '../../images/b1-logo.png'
 import logoBank2 from '../../images/b2-logo.png'
 import ConfirmPayment from './ConfirmPayment'
 import { IMAGE_URL, regStatusConstants } from '../../utils/constants'
-import { eventActions } from '../../actions'
-import { userActions } from '../../actions'
-import { connect } from 'react-redux';
 import { utils } from '../../utils/utils'
 import { eventService, regEventService } from '../../services'
 // import { PayPalButton } from "react-paypal-button-v2";
@@ -852,19 +849,4 @@ class Confirm extends React.Component {
     }
 }
 
-function mapState (state) {
-    const { events } = state.eventer;
-    return { events };
-}
-
-const actionCreators = {
-    addAddress: userActions.addAddress,
-    updateProfile: userActions.updateProfile,
-    regEvent: eventActions.regEvent,
-    regEventByPaypal: eventActions.regEventByPaypal,
-    product: eventActions.selectedProducts,
-    ticket: eventActions.selectedTicket,
-};
-
-const connectedContent = connect(mapState, actionCreators)(Confirm);
-export { connectedContent as Confirm }
+export default Confirm

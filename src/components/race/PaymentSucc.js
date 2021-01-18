@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Media } from 'react-bootstrap'
 import iconrunningwhite from '../../images/icon-running-white.svg'
-import { connect } from 'react-redux';
 import { IMAGE_URL, regStatusConstants } from '../../utils/constants';
 import { history } from '../../store'
 
@@ -74,14 +73,4 @@ class PaymentSucc extends Component {
     }
 }
 
-function mapState (state) {
-    const { regEvent} = state.eventer;
-    console.log(regEvent)
-    return { regEvent };
-  }
-  
-  const actionCreators = {
-  };
-  
-  const connectedContent = connect(mapState, actionCreators)(PaymentSucc);
-  export { connectedContent as PaymentSucc }
+export default PaymentSucc

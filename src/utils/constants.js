@@ -89,3 +89,25 @@ export const regStatusConstants = {
   PAYMENT_QRCODE: 'PAYMENT_QRCODE',
   PAYMENT_FREE: 'PAYMENT_FREE',
 }
+
+export const api = {
+  REFRESH_TOKEN: '/v2/refreshAccessToken',
+  GET_USER: '/v2/user',
+  UPDATE_USER: '/v2/user',
+  LOGOUT: '/v2/logout',
+
+  STRAVA_ACTIVITIES: '/v2/strava/activities',
+
+  EVENTS_ACTIVE: '/v2/event/active',
+  EVENT_INFO: '/v2/event/eventInfo',
+  EVENT_INFO_BY_SLUG: '/v2/event/getBySlug',
+  EVENT_CREATE: '/v2/event',
+  EVENT_UPDATE: '/v2/event/edit',
+  CATEGORY_ALL: '/v1/category/all',
+  MYEVENT: '/v2/event/myEvent',
+
+  USERUPDATE: '/v1/user',
+  UPlOAD_IMAGECOVER: '/v2/uploadCover',
+
+  MYREG_EVENT: '/v2/register/myRegEvent',
+}

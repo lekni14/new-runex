@@ -2,8 +2,6 @@ import React from 'react'
 
 import Address from './Address'
 import Race from './Race'
-import { eventActions } from '../../actions'
-import { connect } from 'react-redux';
 import { ConfirmReturn } from './ConfirmReturn';
 
 class ContentReturn extends React.Component {
@@ -64,17 +62,4 @@ class ContentReturn extends React.Component {
     }
 }
 
-function mapState (state) {
-    const { address, product, ticket, events } = state.eventer;
-    return { address, product, ticket, events };
-  }
-  
-  const actionCreators = {
-    address: eventActions.selectedAddress,
-    product: eventActions.selectedProducts,
-    ticket: eventActions.selectedTicket,
-    events: eventActions.selectedEvent,
-  };
-  
-  const connectedContent = connect(mapState, actionCreators)(ContentReturn);
-  export { connectedContent as ContentReturn }
+export default ContentReturn

@@ -4,7 +4,6 @@ import iconrunning from '../images/icon-running.svg'
 import iconmarker from '../images/icon-marker.svg'
 import { eventService } from '../services/event.service';
 import Image from 'react-bootstrap/Image'
-import { IMAGE_URL } from '../utils/constants';
 import { history } from '../store'
 import { utils } from '../utils/utils';
 // import Banner from './Banner'

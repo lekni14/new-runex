@@ -2,27 +2,30 @@ import moment from "moment";
 import { IMAGE_URL } from "./constants";
 import Cookies from 'js-cookie'
 
+// export const helper = {
+//     getUser,
+//     getToken,
+// }
+
 export class utils {
-    static getStatusKey(status){
-        if(status === "Publish"){
-            return "5d453e2a1e79ab8688d1bd1b";
-        }else if(status === "Unpublish"){
-            return "5d453e2f1e79ab8688d1bd1c";
-        }else if(status === "Hidden"){
-            return "5d453e351e79ab8688d1bd1d";
-        }else{
-            return "";
+
+    static isLogin(){
+        if (Cookies.get('token') === undefined || Cookies.get('token') === null || Cookies.get('token') === ''){
+            return false
         }
+        return true
     }
 
     static setUser(data){
-        console.log(data)
         Cookies.set('user', JSON.stringify(data))
     }
 
     static setToken(token){
-        console.log(token)
         Cookies.set('token', token)
+    }
+
+    static setRefreshToken(token){
+        Cookies.set('refresh_token', token)
     }
 
     static getUser(){

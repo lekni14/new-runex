@@ -4,9 +4,7 @@ import React from 'react'
 // import Race from './Race'
 import Address from '../race/Address'
 import Race from '../race/Race'
-import {Confirm} from '../race/Confirm'
-import { eventActions } from '../../actions'
-import { connect } from 'react-redux';
+import Confirm from '../race/Confirm'
 // import { Confirm } from '.'
 
 class Content extends React.Component {
@@ -67,17 +65,6 @@ class Content extends React.Component {
     }
 }
 
-function mapState (state) {
-    const { address, product, ticket, events } = state.eventer;
-    return { address, product, ticket, events };
-  }
-  
-  const actionCreators = {
-    address: eventActions.selectedAddress,
-    product: eventActions.selectedProducts,
-    ticket: eventActions.selectedTicket,
-    events: eventActions.selectedEvent,
-  };
-  export default Content
+export default Content
 //   const connectedContent = connect(mapState, actionCreators)(Content);
 //   export { connectedContent as Content }
