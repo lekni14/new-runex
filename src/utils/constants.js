@@ -99,7 +99,7 @@ export const api = {
   STRAVA_ACTIVITIES: '/v2/strava/activities',
 
   EVENTS_ACTIVE: '/v2/event/active',
-  EVENT_INFO: '/v2/event/eventInfo',
+  EVENT_INFO: '/v2/event/detail',
   EVENT_INFO_BY_SLUG: '/v2/event/getBySlug',
   EVENT_CREATE: '/v2/event',
   EVENT_UPDATE: '/v2/event/edit',
@@ -110,4 +110,9 @@ export const api = {
   UPlOAD_IMAGECOVER: '/v2/uploadCover',
 
   MYREG_EVENT: '/v2/register/myRegEvent',
+}
+
+export const category = {
+  VR: 'VR',
+  ER: 'ER',
 }

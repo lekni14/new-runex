@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, Row, Media, Button } from 'react-bootstrap'
 import Image from 'react-bootstrap/Image'
-import { IMAGE_URL, regStatusConstants } from '../../utils/constants';
+import { category, regStatusConstants } from '../../utils/constants';
 import { history } from '../../store'
 import Swal from 'sweetalert2'
 import { utils } from '../../utils/utils';
@@ -36,10 +36,10 @@ class MyEvent extends React.Component {
     // }
 
     onClick = (event) => {
-        if (event.event.category.name === 'Run') {
-            if (event.status === regStatusConstants.PAYMENT_WAITING) {
+        if (event.regs[0].event.event.category === category.ER) {
+            if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING) {
                 history.push('/racepayment/' + event.id)
-            } else if (event.status === regStatusConstants.PAYMENT_WAITING_APPROVE) {
+            } else if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING_APPROVE) {
                 Swal.fire({
                     title: '<strong>กำลังอยู่ระหว่างตรวจสอบการชำระเงิน<u></u></strong>',
                     type: 'info',
@@ -55,13 +55,13 @@ class MyEvent extends React.Component {
                     confirmButtonAriaLabel: 'Thumbs up, great!'
                 })
                 //history.push('/add-activity')
-            } else if (event.status === regStatusConstants.PAYMENT_SUCCESS) {
+            } else if (event.regs[0].status === regStatusConstants.PAYMENT_SUCCESS) {
                 //history.push('/add-activity/' + event.id)
             }
         } else {
-            if (event.status === regStatusConstants.PAYMENT_WAITING) {
+            if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING) {
                 history.push('/payment-return/' + event.id)
-            } else if (event.status === regStatusConstants.PAYMENT_WAITING_APPROVE) {
+            } else if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING_APPROVE) {
                 Swal.fire({
                     title: '<strong>กำลังอยู่ระหว่างตรวจสอบการชำระเงิน<u></u></strong>',
                     type: 'info',
@@ -77,7 +77,7 @@ class MyEvent extends React.Component {
                     confirmButtonAriaLabel: 'Thumbs up, great!'
                 })
                 //history.push('/add-activity')
-            } else if (event.status === regStatusConstants.PAYMENT_SUCCESS) {
+            } else if (event.regs[0].status === regStatusConstants.PAYMENT_SUCCESS) {
                 history.push('/add-activity/' + event.id)
             }
         }
@@ -136,23 +136,22 @@ class MyEvent extends React.Component {
                 <Row >
                     <Col sm={12} md={12}>
                         <ul className="list-group">
-                            {this.state.events.map((event, i) => {
-                                console.log(event)
+                            { this.props.event ? this.props.event.map((event, i) => {
                                 return (
 
                                     <li className="list-group-item" key={i}>
                                         <Row>
                                             <Col lg="8" md="6">
                                                 <Media >
-                                                    <Link to={event.event.category.name === 'Run' ? this.getRunLink(event.id) : this.getLink(event.id, event.status)}>
-                                                        <Image className="mr-3" height="64" src={event.event.coverThumbnail === '' ? `${event.event.cover}` : `${event.event.cover_thumb}`} rounded /></Link>
+                                                    <Link to={event.regs[0].event.event.category === category.ER ? this.getRunLink(event.id) : this.getLink(event.id, event.regs[0].status)}>
+                                                        <Image className="mr-3" height="64" src={event.regs[0].event.event.coverThumbnail === '' ? `${event.regs[0].event.event.cover}` : `${event.regs[0].event.event.coverThumbnail}`} rounded /></Link>
                                                     <Media.Body>
-                                                        <h4>{event.event.name}</h4>
+                                                        <h4>{event.regs[0].event.event.title}</h4>
                                                         <h6 className="text-custom">
 
-                                                            <span className="text-caption">Order:</span><Link style={{ color: '#FA6400' }} to={event.event.category.name === 'Run' ? this.getRunLink(event.id) : this.getLink(event.id, event.status)}> {event.id}
+                                                            <span className="text-caption">Order:</span><Link style={{ color: '#FA6400' }} to={event.regs[0].event.event.category === category.ER ? this.getRunLink(event.id) : this.getLink(event.id, event.regs[0].status)}> {event.id}
                                                             </Link><br />
-                                                            <EditAddress regData={event} />
+                                                            {/* <EditAddress regData={event} /> */}
                                                         </h6>
                                                     </Media.Body>
                                                 </Media>
@@ -161,13 +160,13 @@ class MyEvent extends React.Component {
                                                 <div className="clearfix">
                                                     <div >
                                                         <p className="mb-0 label-component">Payment Status</p>
-                                                        <h6 className="float-left" style={{ color: this.statusColor(event.status) }}>{this.statusTH(event.status)}</h6>
+                                                        <h6 className="float-left" style={{ color: this.statusColor(event.regs[0].status) }}>{this.statusTH(event.regs[0].status)}</h6>
 
                                                     </div>
                                                     <div className="float-right">
 
-                                                        <Button variant="outline-secondary rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={(event.status === regStatusConstants.PAYMENT_WAITING || (event.event.inapp || utils.isAfterDate(event.event.end_event) ? true : false))}>ส่งระยะ</Button>
-                                                        <Button variant="outline-danger rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={event.status !== regStatusConstants.PAYMENT_WAITING || utils.isAfterDate(event.event.end_event)}>แจ้งชำระเงิน</Button>
+                                                        <Button variant="outline-secondary rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={(event.status === regStatusConstants.PAYMENT_WAITING || (event.regs[0].event.event.inapp || utils.isAfterDate(event.regs[0].event.event.eventEndDate) ? true : false))}>ส่งระยะ</Button>
+                                                        <Button variant="outline-danger rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={event.status !== regStatusConstants.PAYMENT_WAITING || utils.isAfterDate(event.regs[0].event.event.registerEndDate)}>แจ้งชำระเงิน</Button>
                                                     </div>
                                                 </div>
                                             </Col>
@@ -177,7 +176,7 @@ class MyEvent extends React.Component {
                                         </Row>
                                     </li>
                                 )
-                            })}
+                            }) : ''}
                         </ul>
                     </Col>
                 </Row>

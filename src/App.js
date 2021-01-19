@@ -7,7 +7,6 @@ import Swal from 'sweetalert2'
 import ReactGA from 'react-ga'
 import Callback from './components/Callback'
 import RaceProfile from './components/RaceRegister'
-import Home from './components/Home'
 import AddOtherPerson from './components/regrace/AddOtherPerson'
 import RaceSummary from './components/regrace/RaceSummary'
 import RaceEditProfile from './components/regrace/RaceEditProfile'
@@ -69,7 +68,7 @@ class App extends React.Component {
             <div id="content-wrap">
               <Route exact path="/callback" component={Callback} />
               <PrivateRoute exact path="/" component={MyEventPage} />
-              <PrivateRoute exact path="/raceregister/:slug" component={RaceProfile} />
+              <PrivateRoute exact path="/register/:code" component={RaceProfile} />
               <PrivateRoute path="/racesummary" component={RaceSummary} />
               <PrivateRoute exact path="/raceedit" component={RaceEditProfile} />
               <PrivateRoute exact path="/addother" component={AddOtherPerson} />

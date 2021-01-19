@@ -1,9 +1,10 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
 import iconshirtactive from '../../images/icon-tshirt-active.svg'
 import { utils } from '../../utils/utils'
-import { IMAGE_URL, regStatusConstants } from '../../utils/constants'
+import { category, regStatusConstants } from '../../utils/constants'
 import { history } from '../../store'
 import { regEventService } from '../../services'
 import ConditionsModal from './ConditionsModal'
@@ -278,7 +279,7 @@ export default class RaceSummary extends Component {
                                 <Col md={8}>
                                     <Card className="px-4 py-3 mb-3">
                                         {this.showPersonList()}
-                                        <Card.Body>
+                                        <Card.Body style={{ display: event ? (event.category === category.VR ? "none" : "block") : 'none' }}>
                                             <button type="button"  className="btn btn-outline-primary rounded-pill custom-font mr-2 " onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
                                             {/* style={{ display: ticket_options[0].tickets.category === 'single' ? "none" : '' }} */}
                                             {/* <Button type="submit" className="btn-outline-primary rounded-pill" >

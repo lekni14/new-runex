@@ -1,9 +1,10 @@
-import { API_URL } from '../utils/constants'
+import { api, API_URL } from '../utils/constants'
 import axios from 'axios'
 import { alertActions } from '../actions'
 import { alertConstants } from '../utils/constants'
 import Resizer from 'react-image-file-resizer'
 import { utils } from '../utils/utils'
+import { service } from './service'
 
 export const eventService = {
     addEvent,
@@ -80,18 +81,8 @@ async function getEventInfo (eventID) {
         return { code: 302, status: error.status, msg: "Can not load event" }
     })
 }
-async function getDetail (eventID) {
-    return await axios({
-        method: "GET",
-        // url: `${API_URL}/event/detail/${eventID}`
-        url: `https://events-api.runex.co/event/JZXlZ`
-    }).then(response => {
-        //console.log(response)
-        return response
-    }).catch(error => {
-        //console.log(error)
-        return { code: 302, status: error.status, msg: "Can not load event" }
-    })
+async function getDetail (code) {
+    return service.call('GET', {}, `${api.EVENT_INFO}/${code}`)
 }
 
 

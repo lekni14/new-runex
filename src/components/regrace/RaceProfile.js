@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
@@ -8,12 +9,12 @@ import ThaiAddress from "react-thai-address";
 import iconrunningwhite from '../../images/icon-running-white.svg'
 //import moment from 'moment'
 import { utils } from '../../utils/utils'
-import { IMAGE_URL } from '../../utils/constants'
 import { history } from '../../store'
-import { eventService, userService } from '../../services'
+import { eventService } from '../../services'
 // import { CountryDropdown } from 'react-country-region-selector'
 import Swal from 'sweetalert2'
 import ReactDatePicker from 'react-datepicker'
+import { category } from '../../utils/constants'
 
 export default class RaceProfile extends Component {
 
@@ -165,10 +166,10 @@ export default class RaceProfile extends Component {
     // }
 
     getEvent() {
-        const { eventID } = this.props.match.params
+        const { code } = this.props.match.params
         // const { eventID } = this.props.route.match.params
-
-        eventService.getEventInfo(eventID).then(res => {
+        console.log(code)
+        eventService.getDetail(code).then(res => {
             if (res.data.code === 200) {
                 this.setState({
                     event: res.data.data.event
@@ -468,7 +469,6 @@ export default class RaceProfile extends Component {
     }
 
     saveData = () => {
-        console.log(this)
         var address = {
             address: this.state.address_no,
             province: this.state.province,
@@ -491,19 +491,15 @@ export default class RaceProfile extends Component {
         data.blood_type = this.state.blood_type
         data.nationality = this.state.country
         data.fullname = this.state.firstname + ' ' + this.state.lastname
-        // userService.updateUser(data).then(response => {
-        //     console.log(response)
-        //     if (response.code === 200) {
-        const { productTickets, ticket, products, reciept_type } = this.state
+        const { productTickets, ticket, reciept_type } = this.state
         const { event } = this.props
-        console.log(productTickets)
         if (ticket.id === undefined || ticket.id === null) {
             Swal.fire(
                 '',
                 'Please select distance.',
                 'warning'
             )
-        } else if (event.shirts.length != 0 && productTickets.length === 0) {
+        } else if (event.shirts.length !== 0 && productTickets.length === 0) {
             Swal.fire(
                 '',
                 'Please select shirt size.',
@@ -635,7 +631,6 @@ export default class RaceProfile extends Component {
         const { validated, birthdate, citycen_id, gender, phone, address_no, province, district, postcode, city } = this.state
         const { productOnTicketSize, ticket, blood_type, country, emergency_contact, emergency_phone } = this.state
         const { event, tickets } = this.props
-        console.log(tickets)
         const handleValidate = e => {
             const form = e.currentTarget;
             e.preventDefault();
@@ -662,9 +657,9 @@ export default class RaceProfile extends Component {
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }} >ราคาค่าสมัคร</p>
                                             <h1 className="mb-0" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }}>{this.showPrice() + ' ' + 'THB'} </h1>
-                                            <p className="text-muted mb-4" style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>(including. postage fee)</p>
-                                            <Card.Title style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
-                                            <Media style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>
+                                            {/* <p className="text-muted mb-4" style={{ display: event ? (event.isFreeEvent === true ? "none" : "block") : 'none' }}>(including. postage fee)</p> */}
+                                            <Card.Title style={{ display: event ? (event.isFreeEvent === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
+                                            <Media style={{ display: event ? (event.isFreeEvent === true ? "none" : "block") : 'none' }}>
                                                 <img
                                                     width={35}
                                                     height={35}
@@ -672,7 +667,7 @@ export default class RaceProfile extends Component {
                                                     src={iconmedal}
                                                     alt="runex"
                                                 />
-                                                <Media.Body style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>
+                                                <Media.Body style={{ display: event ? (event.isFreeEvent === true ? "none" : "block") : 'none' }}>
                                                     <h6 className="mb-1 pt-1">Finisher's Medal</h6>
                                                 </Media.Body>
                                             </Media>
@@ -705,6 +700,9 @@ export default class RaceProfile extends Component {
                                                         />
                                                         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                                     </Form.Group>
+                                                </Form.Row>
+
+                                                <Form.Row>
                                                     <Form.Group as={Col} controlId="validationCustom02">
                                                         <Form.Label>นามสกุล, Last name<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control
@@ -719,7 +717,7 @@ export default class RaceProfile extends Component {
 
                                                 </Form.Row>
 
-                                                <Form.Group controlId="formBasicBirthday">
+                                                <Form.Group controlId="formPassport">
                                                     <Form.Row>
                                                         <Col xs={5}>
                                                             <Form.Label>บัตรประชาชน, Passport<span className="text-danger">*</span></Form.Label>
@@ -737,16 +735,20 @@ export default class RaceProfile extends Component {
 
                                                     </Form.Row>
                                                 </Form.Group>
-                                                <Form.Group controlId="formBasicBirthday">
+                                                <Form.Group controlId="formBasicPhone">
                                                     <Form.Row>
-                                                        <Col xs={7}>
+                                                        <Col>
 
                                                             <Form.Label>เบอร์โทรศัพท์, Phone<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control minLength='10' type="number" placeholder="เบอร์โทรศัพท์, Phone" value={phone} required onChange={e => this.setState({ phone: e.target.value })} />
                                                             <Form.Control.Feedback type="invalid">เบอร์โทรศัพท์, Phone is required!</Form.Control.Feedback>
 
                                                         </Col>
-                                                        <Col xs={5}>
+                                                    </Form.Row>
+                                                </Form.Group>
+                                                <Form.Group controlId="formBasicGender">
+                                                    <Form.Row>
+                                                        <Col >
 
                                                             <Form.Label>เพศ, Gender<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control value={gender} as="select" className="form-select" onChange={this.onSelectGender} required>
@@ -761,7 +763,7 @@ export default class RaceProfile extends Component {
                                                 </Form.Group>
                                                 <Form.Group controlId="formBasicBirthday">
                                                     <Form.Row>
-                                                        <Col xs={7}>
+                                                        <Col>
                                                             <Form.Label>วัน เดือน ปีเกิด, Birthday <span className="text-danger">*</span></Form.Label>
                                                             <Form.Row>
                                                                 <ReactDatePicker
@@ -781,7 +783,12 @@ export default class RaceProfile extends Component {
                                                                 <Form.Control.Feedback type="invalid">วัน เดือน ปีเกิด, Birthday  is required!</Form.Control.Feedback>
                                                             </Form.Row>
                                                         </Col>
-                                                        <Col xs={5}>
+                                                    </Form.Row>
+                                                </Form.Group>
+
+                                                <Form.Group controlId="formBasicBlood">
+                                                    <Form.Row>
+                                                        <Col>
                                                             <Form.Label>กรุ๊ปเลือด, Blood type<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control value={blood_type} as="select" className="form-select" onChange={this.onSelectBloodType} required>
                                                                 <option value="">ระบุ, Select</option>
@@ -795,12 +802,17 @@ export default class RaceProfile extends Component {
                                                     </Form.Row>
                                                 </Form.Group>
 
+                                                < br />
+                                                <hr color='#FA6400'></hr>
+
                                                 <Form.Group controlId="formGridAddress">
                                                     <Form.Label>ที่อยู่, Address<span className="text-danger">*</span></Form.Label>
                                                     <Form.Control as="textarea" rows="2" placeholder="" value={address_no} required onChange={e => this.setState({ address_no: e.target.value })} />
                                                     <Form.Control.Feedback type="invalid">ที่อยู่, Address is required!</Form.Control.Feedback>
                                                 </Form.Group>
+
                                                 <Form.Row>
+
                                                     <Form.Group as={Col} controlId="formGridCity">
                                                         <Form.Label>จังหวัด, Province<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control
@@ -817,6 +829,9 @@ export default class RaceProfile extends Component {
                                                         <Form.Control.Feedback type="invalid">จังหวัด, Province is required!</Form.Control.Feedback>
                                                     </Form.Group>
 
+                                                </Form.Row>
+
+                                                <Form.Row>
                                                     <Form.Group as={Col} controlId="formGridState">
                                                         <Form.Label>อำเภอ, District<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control
@@ -855,187 +870,132 @@ export default class RaceProfile extends Component {
                                                         </Form.Control>
                                                         <Form.Control.Feedback type="invalid">ตำบล, Sub District is required!</Form.Control.Feedback>
                                                     </Form.Group>
-
+                                                </Form.Row>
+                                                <Form.Row>
                                                     <Form.Group as={Col} controlId="formGridZip">
                                                         <Form.Label>รหัสไปรษณีย์, Postcode<span className="text-danger">*</span></Form.Label>
                                                         <Form.Control required defaultValue={postcode} />
                                                         <Form.Control.Feedback type="invalid">Postcode is required!</Form.Control.Feedback>
                                                     </Form.Group>
                                                 </Form.Row>
-                                                <hr color='#FA6400'></hr>
 
-                                                <Form.Group controlId="formTicket">
-                                                    <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
-                                                    <select className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
-                                                        <option value='' key='99'>{this.state.select_ticket}</option>
-                                                        {tickets !== undefined ? tickets !== null ? tickets.map((item, index) => (
-                                                            <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
-                                                        )) : '' : ''}
-                                                    </select>
-                                                </Form.Group>
-                                                <Form.Label hidden={event.shirts === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>
-                                                {/* {event ? event.shirts ? event.shirts.map((prod, index) => ( 
+                                                <hr color='#FA6400'></hr>
+                                                <br />
+                                                <Card>
+                                                    <Card.Body>
+                                                        <Card.Title>เลือกระยะการวิ่ง</Card.Title>
+
+                                                        {/* <hr color='#FA6400'></hr> */}
+
+                                                        <Form.Group controlId="formTicket">
+                                                            <Form.Label>ระบุระยะ, Distance<span className="text-danger">*</span></Form.Label>
+                                                            <select className="custom-select form-select" onChange={this.onChangeTicket.bind()} required>
+                                                                <option value='' key='99'>{this.state.select_ticket}</option>
+                                                                {tickets !== undefined ? tickets !== null ? tickets.map((item, index) => (
+                                                                    <option value={item.id} key={index}>{item.distance !== 0 ? item.title + ' ' + item.distance + ' km.' : item.title}</option>
+                                                                )) : '' : ''}
+                                                            </select>
+                                                        </Form.Group>
+                                                        <br />
+
+                                                        <Form.Label hidden={event.shirts === undefined}>ขนาดไซต์เสื้อ, T-Shirt Size<span className="text-danger">*</span></Form.Label>
+                                                        {/* {event ? event.shirts ? event.shirts.map((prod, index) => ( 
                                                     // ticket.product.map((item) => (
                                                     //     (item.id === prod.id && item.show) ? (1:*/}
-                                                <Form.Group className="mb-5">
-                                                    <Form.Label> <span className="text-danger"></span></Form.Label>
-                                                    {/* <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label> */}
-                                                    <Row className="pirate">
+                                                        <Form.Group className="mb-5">
+                                                            <Form.Label> <span className="text-danger"></span></Form.Label>
+                                                            {/* <Form.Label>{prod.detail}<span className="text-danger"></span></Form.Label> */}
+                                                            <Row className="pirate">
 
-                                                        {event.shirts ? event.shirts.map((prod, index) => (
-                                                            (event.shirts.length === index) ? (
-                                                                <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
-                                                                    <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
-                                                                        <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
-                                                                            onClick={this.onSelectedSize.bind(this, prod)}>
+                                                                {event.shirts ? event.shirts.map((prod, index) => (
+                                                                    (event.shirts.length === index) ? (
+                                                                        <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                            <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                                <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                                    onClick={this.onSelectedSize.bind(this, prod)}>
 
-                                                                            <img
-                                                                                width={25}
-                                                                                height={20}
-                                                                                className="mr-1"
-                                                                                src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
-                                                                                alt="runex"
-                                                                            />
-                                                                            <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            ) : (
-                                                                    <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
-                                                                        <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
-                                                                            <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
-                                                                                onClick={this.onSelectedSize.bind(this, prod)}>
+                                                                                    <img
+                                                                                        width={25}
+                                                                                        height={20}
+                                                                                        className="mr-1"
+                                                                                        src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                                        alt="runex"
+                                                                                    />
+                                                                                    <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                                </Card.Body>
+                                                                            </Card>
+                                                                        </Col>
+                                                                    ) : (
+                                                                            <Col className="col-half-offset" sm="2" xs="2" key={prod.id + index}>
+                                                                                <Card key={prod.id + index} style={{ cursor: 'pointer', borderColor: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.19)' }} className="text-center mt-1" >
+                                                                                    <Card.Body className="p-2" style={{ color: this.checkProductTicket(prod) ? '#FA6400' : 'rgba(0,0,0,0.75)' }}
+                                                                                        onClick={this.onSelectedSize.bind(this, prod)}>
 
-                                                                                <img
-                                                                                    width={25}
-                                                                                    height={20}
-                                                                                    className="mr-1"
-                                                                                    src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
-                                                                                    alt="runex"
-                                                                                />
-                                                                                <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                )
-                                                        )) : ''}
-                                                    </Row>
-                                                    {/* <Row className="size">
-                                                        <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
-                                                            <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
-                                                                className="text-center" >
-                                                                <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)'), padding: 1 }}
-                                                                    onClick={this.onSelectedProduct.bind(this, true, item, null)}>
-
-                                                                    <h6 className="card-text">ไม่ได้เลือก<br></br><small></small></h6>
-                                                                </Card.Body>
-                                                            </Card>
-                                                        </Col>
-                                                    </Row> */}
-                                                </Form.Group>
-                                                {/* //     ) : ''
-                                                    // ))
-                                                )) : '' : ''} */}
-                                                <Form.Row>
-                                                    <Form.Label style={{ display: event.shirts ? (!this.isSold(event) ? "block" : "block") : 'none' }}>ซื้อสินค้าเพิ่มเติม</Form.Label>
-                                                    {event.shirts ? event.shirts.map((item, index) => (
-                                                        item.status === 'sold' ? (
-                                                            <Form.Group className="mb-5" key={index}>
-                                                                {/* <Form.Label>{item.name}<span className="text-danger"></span></Form.Label>
-                                                            <Form.Label>{item.detail}<span className="text-danger"></span></Form.Label> */}
-                                                                <Row>
-                                                                    <Col>
-                                                                        <img
-                                                                            width={64}
-                                                                            height={64}
-                                                                            className="mr-3"
-                                                                            style={{ marginBottom: 5 }}
-                                                                            src={item.image ? item.image[0].path_url : ''}
-                                                                            alt=""
-                                                                        />
-                                                                    </Col>
-                                                                </Row>
-                                                                {/* <Row className="size">
-                                                                {item ? item.type.map((type, index) => (
-                                                                    <Col className="col-half-offset" sm="2" md="2" key={item.id + index}>
-                                                                        <Card style={{ cursor: 'pointer', borderColor: this.checkProductAndSize(item, type) ? '#FA6400' : 'rgba(0,0,0,0.19)' }}
-                                                                            className="text-center"
-                                                                        >
-                                                                            <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)') }}
-                                                                                onClick={this.onSelectedProduct.bind(this, false, item, type)}>
-
-                                                                                <h6 className="card-text">{type.name}<br></br><small>{type.remark}</small></h6>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
+                                                                                        <img
+                                                                                            width={25}
+                                                                                            height={20}
+                                                                                            className="mr-1"
+                                                                                            src={this.checkProductTicket(prod) ? iconshirtactive : iconshirt}
+                                                                                            alt="runex"
+                                                                                        />
+                                                                                        <h6 className="card-text">{prod.size}<br></br><small>{prod.chest}</small></h6>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        )
                                                                 )) : ''}
-                                                            </Row> */}
-                                                                {/* <Row className="size">
-                                                                <Col className="mt-2" sm="2" xs="4" key={item.id + '99'}>
-                                                                    <Card style={{ cursor: 'pointer', borderColor: (this.checkProductIndex(item) === -1) ? '#FA6400' : 'rgba(0,0,0,0.19)', padding: 1 }}
-                                                                        className="text-center" >
-                                                                        <Card.Body className="p-2" style={{ color: (productOnTicketSize === index ? '#FA6400' : 'rgba(0,0,0,0.75)'), padding: 1 }}
-                                                                            onClick={this.onSelectedProduct.bind(this, true, item, null)}>
+                                                            </Row>
+                                                        </Form.Group>
+                                                        <fieldset>
+                                                            <Form.Group as={Row} style={{ display: event ? (event.category === category.VR ? "none" : "block") : 'none' }}>
 
-                                                                            <h6 className="card-text">ไม่ได้เลือก<br></br><small></small></h6>
-                                                                        </Card.Body>
-                                                                    </Card>
+                                                                <Col sm={10}>
+                                                                    <Form.Label>รูปแบบการจัดส่ง , Shipping<span className="text-danger">*</span></Form.Label>
+                                                                    <Form.Check
+                                                                        type="radio"
+                                                                        label={'รับเสื้อที่หน้างาน ' + event.title}
+                                                                        name="shippingRadios"
+                                                                        id="RecieptMyself"
+                                                                        defaultChecked={true}
+                                                                        onClick={() => this.setState({ reciept_type: 'yourself' })}
+                                                                    />
+                                                                    <Form.Check
+                                                                        type="radio"
+                                                                        label='รับเสื้อทางไปรษณีย์ (ค่าจัดส่ง 60  บาท)'
+                                                                        name="shippingRadios"
+                                                                        id="RecieptPost"
+                                                                        onClick={() => this.setState({ reciept_type: 'postman' })}
+                                                                        style={{ display: event ? (!event.isSendShirtByPost || utils.isAfterDate(event.post_end_date) ? "none" : "block") : 'none' }}
+                                                                    />
                                                                 </Col>
-                                                            </Row> */}
+                                                            </Form.Group>
+                                                        </fieldset>
 
-                                                            </Form.Group>) : ''
-                                                    )) : ''}
-                                                </Form.Row>
+                                                        {/* {if(event.catagory!=="VR")}  */}
+                                                        {event.category !== category.VR ?
+                                                            <><hr color='#FA6400'></hr>
+                                                                <Form.Group controlId="formEmergencyContact">
+                                                                    <Form.Label>ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact list<span className="text-danger">*</span></Form.Label>
+                                                                    {event.category !== "VR" ? <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} required onChange={e => this.setState({ emergency_contact: e.target.value })} /> : <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} onChange={e => this.setState({ emergency_contact: e.target.value })} />}
+                                                                    <Form.Control.Feedback type="invalid">ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact is required!</Form.Control.Feedback>
+                                                                </Form.Group>
+                                                                {/* {(event.catagory === "VR" ? required:'')} */}
+                                                                <Form.Group controlId="formEmergencyPhone">
+                                                                    <Form.Label>เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number<span className="text-danger">*</span></Form.Label>
+                                                                    {event.category !== "VR" ? <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} required onChange={e => this.setState({ emergency_phone: e.target.value })} /> : <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} onChange={e => this.setState({ emergency_phone: e.target.value })} />}
 
-                                                <fieldset>
-                                                    <Form.Group as={Row}>
+                                                                    <Form.Control.Feedback type="invalid">เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number is required!</Form.Control.Feedback>
+                                                                </Form.Group>
+                                                            </>
+                                                            : ""}
+                                                    </Card.Body>
+                                                </Card>
 
-                                                        <Col sm={10}>
-                                                            <Form.Label>รูปแบบการจัดส่ง , Shipping<span className="text-danger">*</span></Form.Label>
-                                                            <Form.Check
-                                                                type="radio"
-                                                                label={'รับเสื้อที่หน้างาน ' + event.title}
-                                                                name="shippingRadios"
-                                                                id="RecieptMyself"
-                                                                defaultChecked={true}
-                                                                onClick={() => this.setState({ reciept_type: 'yourself' })}
-                                                            />
-                                                            <Form.Check
-                                                                type="radio"
-                                                                label='รับเสื้อทางไปรษณีย์ (ค่าจัดส่ง 60  บาท)'
-                                                                name="shippingRadios"
-                                                                id="RecieptPost"
-                                                                onClick={() => this.setState({ reciept_type: 'postman' })}
-                                                                style={{ display: event ? (!event.isSendShirtByPost || utils.isAfterDate(event.post_end_date) ? "none" : "block") : 'none' }}
-                                                            />
-                                                        </Col>
-                                                    </Form.Group>
-                                                </fieldset>
-
-                                                {/* {if(event.catagory!=="VR")}  */}
-                                                {event.category !== "VR" ?
-                                                    <><hr color='#FA6400'></hr>
-                                                        <Form.Group controlId="formEmergencyContact">
-                                                            <Form.Label>ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact list<span className="text-danger">*</span></Form.Label>
-                                                            {event.category !== "VR" ? <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} required onChange={e => this.setState({ emergency_contact: e.target.value })} /> : <Form.Control type="text" placeholder="ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact" value={emergency_contact} onChange={e => this.setState({ emergency_contact: e.target.value })} />}
-                                                            <Form.Control.Feedback type="invalid">ชื่อผู้ติดต่อฉุกเฉิน, Emergency contact is required!</Form.Control.Feedback>
-                                                        </Form.Group>
-                                                        {/* {(event.catagory === "VR" ? required:'')} */}
-                                                        <Form.Group controlId="formEmergencyPhone">
-                                                            <Form.Label>เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number<span className="text-danger">*</span></Form.Label>
-                                                            {event.category !== "VR" ? <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} required onChange={e => this.setState({ emergency_phone: e.target.value })} /> : <Form.Control type="text" placeholder="เบอร์โทรผู้ติดต่อฉุกเฉย, Emergency contact number" value={emergency_phone} onChange={e => this.setState({ emergency_phone: e.target.value })} />}
-
-                                                            <Form.Control.Feedback type="invalid">เบอร์โทรผู้ติดต่อฉุกเฉิน, Emergency contact number is required!</Form.Control.Feedback>
-                                                        </Form.Group>
-                                                    </>
-                                                    : ""}
-
-
-
+                                                <br />
 
                                                 <Row className="justify-content-md-center">
-                                                    <Col md={"auto"} sm={"auto"}>
-                                                        <Button type="submit" className="btn-custom rounded-pill px-4 ml-2" >
+                                                    <Col md={"auto"} sm={"auto"} lg={"auto"}>
+                                                        <Button type="submit" className="btn-custom rounded-pill px-4 ml-8" >
                                                             <img
                                                                 width={25}
                                                                 height={20}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { eventService } from '../services'
+// import { category } from '../utils/constants';
 
 
 export default class RaceRegister extends Component {
@@ -14,14 +15,11 @@ export default class RaceRegister extends Component {
     componentDidMount() {
         this.getEvent()
     }
-    getEvent() {
-        const { slug } = this.props.match.params
-        console.log(slug)
-        // const { eventID } = this.props.route.match.params
+    async getEvent() {
+        const { code } = this.props.match.params
 
-        eventService.getDetail(slug).then(res => {
-            console.log(res)
-            if (res.status === 200) {
+        await eventService.getDetail(code).then(res => {
+            if (res.code === 200) {
                 const { event, tickets } = res.data
                     
                 this.setState({
@@ -36,7 +34,6 @@ export default class RaceRegister extends Component {
     }
     render() {
         const { event, tickets, products } = this.state 
-        console.log(tickets)
         // if(event.event.category.name === 'Run'){
         //     history.push('/raceregister/'+eventID)
         // }else{
@@ -47,14 +44,15 @@ export default class RaceRegister extends Component {
         )
     }
 }
-const Race = React.lazy(() => import('./race/Register'));
+// const Race = React.lazy(() => import('./race/Register'));
 const Visual = React.lazy(() => import('./regrace/RaceProfile'));
 function Register(props) {
     const {event, tickets, products} = props
     // const {category} = (props.event)?props.event.category:null;
-    console.log(event)
-    // if (event.category!=="Virtual Run") {
-    //     return <Race event={props.event} tickets={props.tickets} products={props.products} />;
+    // console.log(event)
+    // if (event.category !== category.VR) {
+    //     return <Race event={event} tickets={tickets} products={products} />;
+    // }else {
+        return <Visual event={event} tickets={tickets} products={products}/>;
     // }
-    return <Visual event={event} tickets={tickets} products={products}/>;
 }
