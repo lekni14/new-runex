@@ -33,7 +33,6 @@ export class utils {
     }
 
     static getToken(){
-        console.log(Cookies.get('token'))
         return Cookies.get('token')
     }
 

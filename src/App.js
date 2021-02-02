@@ -9,6 +9,7 @@ import Callback from './components/Callback'
 import RaceProfile from './components/RaceRegister'
 import AddOtherPerson from './components/regrace/AddOtherPerson'
 import RaceSummary from './components/regrace/RaceSummary'
+import RacePayment from './components/regrace/RacePayment'
 import RaceEditProfile from './components/regrace/RaceEditProfile'
 import { RecoilRoot } from 'recoil'
 import { history } from './store'
@@ -69,9 +70,10 @@ class App extends React.Component {
               <Route exact path="/callback" component={Callback} />
               <PrivateRoute exact path="/" component={MyEventPage} />
               <PrivateRoute exact path="/register/:code" component={RaceProfile} />
-              <PrivateRoute path="/racesummary" component={RaceSummary} />
+              <PrivateRoute path="/summary" component={RaceSummary} />
               <PrivateRoute exact path="/raceedit" component={RaceEditProfile} />
               <PrivateRoute exact path="/addother" component={AddOtherPerson} />
+              <PrivateRoute exact path="/payment" component={RacePayment} />
             </div>
             <Footer />
           </Suspense>

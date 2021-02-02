@@ -5,7 +5,7 @@
 
 //PD
 export const API_URL = 'https://runex-api.thinkdev.app/api/v2'
- export const IMAGE_URL = 'https://runex.co:3006'
+export const IMAGE_URL = 'https://runex.co:3006'
 
 export const HEADER = { headers: { 'Content-Type': 'application/json' } }
 export const PF = 'web'
@@ -105,6 +105,17 @@ export const api = {
   EVENT_UPDATE: '/v2/event/edit',
   CATEGORY_ALL: '/v1/category/all',
   MYEVENT: '/v2/event/myEvent',
+
+  REGISTER: '/v2/register/add',
+
+  ACTIVITY_ADD: '/v2/activity/add',
+  ACTIVITY_INFO: '/v2/activity/getByEvent2/',
+
+  TAMBONS: '/v2/tambons',
+  TAMBON: '/v2/tambon/',
+  PROVINCE: '/v2/province/',
+  AMPHOE: '/v2/amphoe/',
+  DISTRICT: '/v2/district/',
 
   USERUPDATE: '/v1/user',
   UPlOAD_IMAGECOVER: '/v2/uploadCover',

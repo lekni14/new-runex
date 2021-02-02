@@ -2,7 +2,6 @@
 import { api, API_URL } from '../utils/constants'
 import { authHeader, headers } from '../utils/auth-header'
 import axios from 'axios'
-import { history } from '../store'
 import Resizer from 'react-image-file-resizer'
 import { utils } from '../utils/utils'
 import { service } from './service'

@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
-import iconshirtactive from '../../images/icon-tshirt-active.svg'
 import { utils } from '../../utils/utils'
 import { category, regStatusConstants } from '../../utils/constants'
 import { history } from '../../store'
@@ -22,18 +21,17 @@ export default class RaceSummary extends Component {
 
     showPrice() {
         const { ticket_options } = this.props.location.state
-        console.log(ticket_options)
         var total = 0
         if (ticket_options !== undefined) {
             ticket_options.map(item => {
-                total += item.total_price
+                total += parseFloat(item.total_price)
             })
         }
         return total
     }
 
     onEditTicketOptions = (index) => {
-        const { ticket_options, product, event, ticket, reciept_type } = this.props.location.state
+        const { ticket_options, event, ticket } = this.props.location.state
         history.push({
             pathname: '/raceedit',
             state: {
@@ -71,82 +69,126 @@ export default class RaceSummary extends Component {
             e.preventDefault()
         }
 
-        if (sessionStorage.getItem('user_tmp') !== undefined && sessionStorage.getItem('user_tmp') !== null) {
-            this.updateUser(JSON.stringify(sessionStorage.getItem('user_tmp')))
-        }
-
-        const { ticket_options, event, product, ticket } = this.props.location.state
+        const { ticket_options, event, ticket } = this.props.location.state
 
         const total = this.showPrice()
         let status = regStatusConstants.PAYMENT_WAITING
         let paymentType = ''
         var discount = 0
-        if (this.showPrice() === 0) {
+        if (event.isFreeEvent === 0) {
             status = regStatusConstants.PAYMENT_SUCCESS
             paymentType = regStatusConstants.PAYMENT_FREE
             const params = {
-                event: event,
                 event_id: event.id,
-                product: product,
-                tickets: ticket,
-                status: status,
-                payment_type: paymentType,
-                total_price: total,
-                promo_code: this.state.promoText,
-                discount_price: discount,
-                coupon: this.state.coupon,
-                reg_date: utils.dateNow(),
-                shiping_address: {},
-                ticket_options: ticket_options,
-                image: ''
+                event_code: event.code,
+                owner_id: event.user_id,
+                regs:{
+                    event: event,
+                    tickets: ticket,
+                    status: status,
+                    payment_type: paymentType,
+                    total_price: total,
+                    promo_code: this.state.promoText,
+                    discount_price: discount,
+                    coupon: this.state.coupon,
+                    reg_date: utils.dateNow(),
+                    ticket_options: ticket_options,
+                    image: ''
+                },
+                
             }
-            //console.log(params)
-            this.props.regEvent(params)
-        } else {
-            const params = {
-                event: event,
-                event_id: event.id,
-                product: product,
-                tickets: ticket,
-                status: status,
-                payment_type: paymentType,
-                total_price: total,
-                promo_code: this.state.promoText,
-                discount_price: discount,
-                coupon: this.state.coupon,
-                reg_date: utils.dateNow(),
-                shiping_address: {},
-                ticket_options: ticket_options,
-                image: ''
-            }
-            // console.log(params)
-            // this.setState({logs:params})
             Swal.fire({
-                title: 'กำลังส่งข้อมูล',
+                title: 'Please wait...',
                 showConfirmButton: false,
                 onBeforeOpen: () => {
                     Swal.showLoading()
                     regEventService.regRaceEvent(params).then(res => {
                         Swal.close()
-                        if (res.data.code === 200) {
+                        if (res.code === 200) {
                             history.push({
-                                pathname: '/racepayment/' + res.data.data.id,
+                                pathname: '/payment',
+                                state: {
+                                    param: params,
+                                    event: event,
+                                    regdata: res.data
+                                }
+                            })
+                            history.go(0)
+                        } else {
+                            Swal.fire({
+                                type: 'warning',
+                                title: 'Failed',
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        }
+                    }).catch(err => {
+                        Swal.close()
+                        Swal.fire({
+                            type: 'warning',
+                            title: 'Failed',
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
+                    })
+                }
+            })
+        } else {
+            const params = {
+                event_id: event.id,
+                event_code: event.code,
+                owner_id: event.user_id,
+                regs:{
+                    event: event,
+                    tickets: ticket,
+                    event_code: event.code,
+                    status: status,
+                    payment_type: paymentType,
+                    total_price: total,
+                    promo_code: this.state.promoText,
+                    discount_price: discount,
+                    coupon: this.state.coupon,
+                    reg_date: utils.dateNow(),
+                    ticket_options: ticket_options,
+                    image: ''
+                },
+                
+            }
+            // console.log(params)
+            // this.setState({logs:params})
+            Swal.fire({
+                title: 'Please wait...',
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                    regEventService.regRaceEvent(params).then(res => {
+                        console.log(res)
+                        Swal.close()
+                        if (res.code === 200) {
+                            history.push({
+                                pathname: '/racepayment/' + res.data.id,
                                 state: {
                                     param: params,
                                     event: event,
                                 }
                             })
+                            history.go(0)
                         } else {
                             Swal.fire({
                                 type: 'warning',
-                                title: 'ส่งข้อมูลสมัครไม่สำเร็จ',
+                                title: 'Failed',
                                 showConfirmButton: false,
                                 timer: 3000
                             })
                         }
-                    }, error => {
+                    }).catch(err => {
                         Swal.close()
-
+                        Swal.fire({
+                            type: 'warning',
+                            title: 'Failed',
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
                     })
                 }
             })
@@ -156,7 +198,6 @@ export default class RaceSummary extends Component {
     showPersonList() {
         var arr = []
         const { ticket_options } = this.props.location.state
-        console.log(ticket_options)
         if (ticket_options !== undefined) {
             ticket_options.map((item, index) => {
 
@@ -168,8 +209,8 @@ export default class RaceSummary extends Component {
                                 <h6 className="h5 mb-0">{item.user_option.firstname + ' ' + item.user_option.lastname}</h6>
                                 <Row>
                                     <Col>
-                                        <p className="custom-font mb-0 text-muted">{item.user_option.citycen_id !== '' ? 'เลขบัตรประชาชน' : 'Passport'}</p>
-                                        <p className="custom-font mb-0 ">{item.user_option.citycen_id !== '' ? item.user_option.citycen_id : item.user_option.passport}</p>
+                                        <p className="custom-font mb-0 text-muted">{'เลขบัตรประชาชน'}</p>
+                                        <p className="custom-font mb-0 ">{item.user_option.citycen_id}</p>
                                     </Col>
                                     <Col>
                                         <p className="custom-font mb-0 text-muted">เบอร์โทร</p>
@@ -202,10 +243,13 @@ export default class RaceSummary extends Component {
                                         </Card>
                                     </Col> */}
                                     <Col>
-                                        <p className="custom-font mb-0 text-muted">ราคา</p>
+                                        <p className="custom-font mb-0 text-muted">Price</p>
                                         <p className="custom-font mb-0" style={{ color: '#FA6400' }}>{item.total_price}</p>
                                     </Col>
-
+                                    <Col>
+                                        <p className="custom-font mb-0 text-muted">Shirts</p>
+                                        <p className="custom-font mb-0">{`${item.shirts.size} ${item.shirts.chest}`}</p>
+                                    </Col>
                                 </Row>
 
                             </Col>
@@ -215,6 +259,12 @@ export default class RaceSummary extends Component {
                             </Col>
 
                         </Row>
+                        <Row>
+                        <Col>
+                                <p className="custom-font mb-0 text-muted">ที่อยู่จัดส่ง</p>
+                                <p className="custom-font mb-0 ">{item.user_option.address}</p>
+                            </Col>
+                        </Row>
                     </Card.Body>
                 )
             })
@@ -223,9 +273,7 @@ export default class RaceSummary extends Component {
     }
 
     render() {
-        console.log(this.props)
-        console.log(this.state)
-        const { event, ticket, ticket_options } = this.props.location.state
+        const { event } = this.props.location.state
         return (
             <div>
                 <Container className="mt-5" >
@@ -238,8 +286,8 @@ export default class RaceSummary extends Component {
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4">ราคาค่าสมัคร</p>
-                                            <h1 className="mb-0" onChange={e => this.setState({ showPrice: e.value })} style={{ color: '#FA6400' }}>{this.showPrice() + ' ' + 'THB'} </h1>
-                                            <p className="text-muted mb-4" style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>(including. postage fee)</p>
+                                            <h1 className="mb-0" onChange={e => this.setState({ showPrice: e.value })} style={{ color: '#FA6400' }}>{this.showPrice() + ' THB'} </h1>
+                                            {/* <p className="text-muted mb-4" style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>(including. postage fee)</p> */}
                                             <Card.Title style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
                                             <Media style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>
                                                 <img
@@ -279,8 +327,8 @@ export default class RaceSummary extends Component {
                                 <Col md={8}>
                                     <Card className="px-4 py-3 mb-3">
                                         {this.showPersonList()}
-                                        <Card.Body style={{ display: event ? (event.category === category.VR ? "none" : "block") : 'none' }}>
-                                            <button type="button"  className="btn btn-outline-primary rounded-pill custom-font mr-2 " onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
+                                        <Card.Body >
+                                            <button style={{ display: event ? (event.category === category.VR ? "none" : "block") : 'none' }} type="button"  className="btn btn-outline-primary rounded-pill custom-font mr-2 " onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
                                             {/* style={{ display: ticket_options[0].tickets.category === 'single' ? "none" : '' }} */}
                                             {/* <Button type="submit" className="btn-outline-primary rounded-pill" >
                                         ยืนยัน</Button> */}

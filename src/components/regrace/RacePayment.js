@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container, Collapse } from 'react-bootstrap'
 // import iconrunning from '../../images/icon-running.svg'
-import methodsPayment from '../../../images/free-ecommerce-icon-set-bshk-13.jpg'
-import iconrunningwhite from '../../../images/icon-running-white.svg'
-import QR_Code from '../../../images/QR_Code.png'
-import logoBank1 from '../../../images/b1-logo.png'
-import logoBank2 from '../../../images/b2-logo.png'
-import ConfirmPayment from '../ConfirmPayment'
-import { IMAGE_URL, regStatusConstants } from '../../../utils/constants'
-import { utils } from '../../../utils/utils'
-import { eventService, regEventService } from '../../../services'
+import methodsPayment from '../../images/free-ecommerce-icon-set-bshk-13.jpg'
+import iconrunningwhite from '../../images/icon-running-white.svg'
+import QR_Code from '../../images/QR_Code.png'
+import logoBank1 from '../../images/b1-logo.png'
+import logoBank2 from '../../images/b2-logo.png'
+import { IMAGE_URL, regStatusConstants } from '../../utils/constants'
+import { utils } from '../../utils/utils'
+import { eventService, regEventService } from '../../services'
 import Swal from 'sweetalert2'
-import { CheckoutCreditCard } from '../../omise-prebuilt-form'
-import { history } from '../../../store'
+import { CheckoutCreditCard } from '../omise-prebuilt-form'
+import { history } from '../../store'
 
 export default class RacePayment extends Component {
 
@@ -33,16 +32,16 @@ export default class RacePayment extends Component {
     }
 
     getRegEvent () {
-        const { regID } = this.props.match.params
+        // const { regID } = this.props.match.params
         // const { eventID } = this.props.route.match.params
 
-        regEventService.getRegEventDetail(regID).then(res => {
-            if (res.data.code === 200) {
-                this.setState({
-                    reg_data: res.data.data
-                })
-            }
-        })
+        // regEventService.getRegEventDetail(regID).then(res => {
+        //     if (res.data.code === 200) {
+        //         this.setState({
+        //             reg_data: res.data.data
+        //         })
+        //     }
+        // })
     }
 
     handleOptionChange = (changeEvent) => {
@@ -373,7 +372,7 @@ export default class RacePayment extends Component {
                                                         <h5>แนบหลักฐานการโอนเงิน</h5>
                                                         <p className="text-custom">ยังไม่ได้ยืนยันหลักฐานยืนยันการสมัคร</p>
                                                     </div>
-                                                    <ConfirmPayment uploadSlip={this.attachFileSlip} />
+                                                    {/* <ConfirmPayment uploadSlip={this.attachFileSlip} /> */}
                                                     {/* <button type="button" className="btn btn-outline-warning float-right rounded-pill"><img width="25" height="20" class="mr-1" src={iconupload} alt="runex" />อัปโหลดสลิป</button> */}
                                                 </div>
                                             </Card.Body>
@@ -442,7 +441,7 @@ export default class RacePayment extends Component {
                                                                         <h5>แนบหลักฐานการโอนเงิน</h5>
                                                                         <p className="text-custom">ยังไม่ได้ยืนยันหลักฐานยืนยันการสมัคร</p>
                                                                     </div>
-                                                                    <ConfirmPayment uploadSlip={this.attachFileSlip} />
+                                                                    {/* <ConfirmPayment uploadSlip={this.attachFileSlip} /> */}
                                                                     {/* <button type="button" className="btn btn-outline-warning float-right rounded-pill"><img width="25" height="20" class="mr-1" src={iconupload} alt="runex" />อัปโหลดสลิป</button> */}
                                                                 </div>
                                                             </Card.Body>
