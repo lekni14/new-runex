@@ -5,7 +5,6 @@ import { category, regStatusConstants } from '../../utils/constants';
 import { history } from '../../store'
 import Swal from 'sweetalert2'
 import { utils } from '../../utils/utils';
-import EditAddress from './EditAddress'
 import { Link } from 'react-router-dom';
 
 class MyEvent extends React.Component {
@@ -17,28 +16,17 @@ class MyEvent extends React.Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.getEvent();
-    // }
-
-    // getEvent() {
-    //     regEventService.myRegEvents().then(res => {
-    //         //console.log(res)
-    //         if (res.data.code === 200) {
-    //             if (res.data.data != null) {
-    //                 this.setState({
-    //                     events: res.data.data
-    //                 })
-    //             }
-    //         }
-
-    //     })
-    // }
-
     onClick = (event) => {
-        if (event.regs[0].event.event.category === category.ER) {
+        if (event.regs[0].event.category === category.ER) {
             if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING) {
-                history.push('/racepayment/' + event.id)
+                history.push({
+                    pathname: '/payment',
+                    state: {
+                        event: event.regs[0].event,
+                        regdata: event.regs[0]
+                    }
+                })
+                history.go(0)
             } else if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING_APPROVE) {
                 Swal.fire({
                     title: '<strong>กำลังอยู่ระหว่างตรวจสอบการชำระเงิน<u></u></strong>',
@@ -60,7 +48,14 @@ class MyEvent extends React.Component {
             }
         } else {
             if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING) {
-                history.push('/payment-return/' + event.id)
+                history.push({
+                    pathname: '/payment',
+                    state: {
+                        event: event.regs[0].event,
+                        regdata: event.regs[0]
+                    }
+                })
+                history.go(0)
             } else if (event.regs[0].status === regStatusConstants.PAYMENT_WAITING_APPROVE) {
                 Swal.fire({
                     title: '<strong>กำลังอยู่ระหว่างตรวจสอบการชำระเงิน<u></u></strong>',
@@ -143,13 +138,13 @@ class MyEvent extends React.Component {
                                         <Row>
                                             <Col lg="8" md="6">
                                                 <Media >
-                                                    <Link to={event.regs[0].event.event.category === category.ER ? this.getRunLink(event.id) : this.getLink(event.id, event.regs[0].status)}>
-                                                        <Image className="mr-3" height="64" src={event.regs[0].event.event.coverThumbnail === '' ? `${event.regs[0].event.event.cover}` : `${event.regs[0].event.event.coverThumbnail}`} rounded /></Link>
+                                                    <Link to={event.regs[0].event.category === category.ER ? this.getRunLink(event.regs[0].id) : this.getLink(event.regs[0].id, event.regs[0].status)}>
+                                                        <Image className="mr-3" height="64" src={event.regs[0].event.coverThumbnail === '' ? `${event.regs[0].event.cover}` : `${event.regs[0].event.coverThumbnail}`} rounded /></Link>
                                                     <Media.Body>
-                                                        <h4>{event.regs[0].event.event.title}</h4>
+                                                        <h4>{event.regs[0].event.title}</h4>
                                                         <h6 className="text-custom">
 
-                                                            <span className="text-caption">Order:</span><Link style={{ color: '#FA6400' }} to={event.regs[0].event.event.category === category.ER ? this.getRunLink(event.id) : this.getLink(event.id, event.regs[0].status)}> {event.id}
+                                                            <span className="text-caption">Order:</span><Link style={{ color: '#FA6400' }} to={event.regs[0].event.category === category.ER ? this.getRunLink(event.id) : this.getLink(event.id, event.regs[0].status)}> {event.regs[0].order_id}
                                                             </Link><br />
                                                             {/* <EditAddress regData={event} /> */}
                                                         </h6>
@@ -165,8 +160,8 @@ class MyEvent extends React.Component {
                                                     </div>
                                                     <div className="float-right">
 
-                                                        <Button variant="outline-secondary rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={(event.status === regStatusConstants.PAYMENT_WAITING || (event.regs[0].event.event.inapp || utils.isAfterDate(event.regs[0].event.event.eventEndDate) ? true : false))}>ส่งระยะ</Button>
-                                                        <Button variant="outline-danger rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={event.status !== regStatusConstants.PAYMENT_WAITING || utils.isAfterDate(event.regs[0].event.event.registerEndDate)}>แจ้งชำระเงิน</Button>
+                                                        <Button variant="outline-secondary rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={(event.regs[0].status === regStatusConstants.PAYMENT_WAITING || (event.regs[0].event.isRunexOnly || utils.isAfterDate(event.regs[0].event.eventEndDate) ? true : false))}>ส่งระยะ</Button>
+                                                        <Button variant="outline-danger rounded-pill btn-list-component" onClick={this.onClick.bind(this, event)} hidden={event.regs[0].status !== regStatusConstants.PAYMENT_WAITING || utils.isAfterDate(event.regs[0].event.registerEndDate)}>แจ้งชำระเงิน</Button>
                                                     </div>
                                                 </div>
                                             </Col>

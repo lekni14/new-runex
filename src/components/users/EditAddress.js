@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from 'react'
 import { Col, Button, Modal, Form, InputGroup } from "react-bootstrap";
 import ThaiAddress from "react-thai-address";

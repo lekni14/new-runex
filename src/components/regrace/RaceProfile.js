@@ -1,5 +1,5 @@
 /* eslint-disable array-callback-return */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
 import iconshirt from '../../images/icon-shirt.svg'
@@ -9,7 +9,7 @@ import iconrunningwhite from '../../images/icon-running-white.svg'
 //import moment from 'moment'
 import { utils } from '../../utils/utils'
 import { history } from '../../store'
-import { getDistrict, getTambon, getProvince, getAmphoe } from '../../services'
+import { getDistrict, getTambon, getProvince, getAmphoe, regEventService } from '../../services'
 // import { CountryDropdown } from 'react-country-region-selector'
 import Swal from 'sweetalert2'
 import ReactDatePicker from 'react-datepicker'
@@ -21,7 +21,6 @@ import empty from "is-empty";
 
 export default function RaceProfile(props) {
     const event = props.event
-    console.log(props)
     const tickets = event.tickets
     const [firstname, setFirstname] = useState('')
     const [citycen_id, setCitycenID] = useState('')
@@ -33,7 +32,7 @@ export default function RaceProfile(props) {
     const [blood_type, setBloodType] = useState('')
     const [emergency_phone, setEmergencyPhone] = useState('')
     const [emergency_contact, setEmergencyContact] = useState('')
-    const [reciept_type, setRecieptType] = useState('')
+    const [reciept_type, setRecieptType] = useState(event.category === category.VR ? 'postman' : 'yourself')
     const [shirts, setShirts] = useState(null)
     const [tambons, setTambons] = useState([])
     const [tambon, setTambon] = useState(null)
@@ -41,6 +40,21 @@ export default function RaceProfile(props) {
     const [validated, setValidated] = useState(false)
     const [address_no, setAddressNo] = useState('')
     const [errors, setErrors] = useState({});
+    const [isReg, setIsReg] = useState(false)
+
+    useEffect(() => {
+        regEventService.checkRegEvent(event.code).then(res=>{
+            if(res.code === 200){
+                setIsReg(res.data.is_reg)
+                if(res.data.is_reg){
+                    history.push('/')
+                    history.go(0)
+                }
+            }
+        }).catch(err=>{
+            
+        })
+    }, [event.code])
 
     function onSelectBirthdate(e) {
         setBirthdateApi(utils.convertDateToApi(e))
@@ -135,9 +149,10 @@ export default function RaceProfile(props) {
         var total = 0
         if (ticket !== null && ticket !== undefined) {
             total += parseFloat(ticket.price)
-
-            if (reciept_type === 'postman') {
-                total += 60
+            if(event.category === category.ER){
+                if (reciept_type === 'postman') {
+                    total += 60
+                }
             }
         }
         // if (total === 0) {
@@ -211,7 +226,7 @@ export default function RaceProfile(props) {
                 total_price: showPrice(),
                 reciept_type: reciept_type
             }
-            history.push('/racesummary',
+            history.push('/regsummary',
                 {
                     ticket: tickets,
                     event: event,
@@ -627,7 +642,7 @@ export default function RaceProfile(props) {
                                                     </Form.Group>
                                                 </>
                                                 : ""}
-                                            <Row className="justify-content-md-center">
+                                            <Row className="justify-content-md-center" style={{ display:isReg ? "none" : "block"}}>
                                                 <Col md={"auto"} sm={"auto"}>
                                                     <Button type="submit" className="btn-custom rounded-pill px-4 ml-2" >
                                                         <img

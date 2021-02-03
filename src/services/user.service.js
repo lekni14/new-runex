@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { api, API_URL } from '../utils/constants'
-import { authHeader, headers } from '../utils/auth-header'
+import { headers } from '../utils/auth-header'
 import axios from 'axios'
 import Resizer from 'react-image-file-resizer'
 import { utils } from '../utils/utils'
@@ -181,35 +181,6 @@ function addAddress (address) {
     return response
   }).catch(error => {
     console.log(error)
-  })
-}
-
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete (id) {
-  const requestOptions = {
-    method: 'DELETE',
-    headers: authHeader()
-  }
-
-  // return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse)
-}
-
-function handleResponse (response) {
-  return response.text().then(text => {
-    const data = text && JSON.parse(text)
-    if (!response.ok) {
-      if (response.status === 401) {
-        // auto logout if 401 response returned from api
-        logout()
-        // eslint-disable-next-line no-restricted-globals
-        location.reload(true)
-      }
-
-      const error = (data && data.message) || response.statusText
-      return Promise.reject(error)
-    }
-
-    return data
   })
 }
 

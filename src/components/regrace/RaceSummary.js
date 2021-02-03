@@ -19,6 +19,13 @@ export default class RaceSummary extends Component {
         }
     }
 
+    componentDidMount(){
+        const { event } = this.props.location.state
+        if (event === undefined) {
+            history.goBack()
+        }
+    }
+
     showPrice() {
         const { ticket_options } = this.props.location.state
         var total = 0
@@ -110,7 +117,7 @@ export default class RaceSummary extends Component {
                                 state: {
                                     param: params,
                                     event: event,
-                                    regdata: res.data
+                                    regdata: res.data.regs[0]
                                 }
                             })
                             history.go(0)
@@ -166,10 +173,11 @@ export default class RaceSummary extends Component {
                         Swal.close()
                         if (res.code === 200) {
                             history.push({
-                                pathname: '/racepayment/' + res.data.id,
+                                pathname: '/payment',
                                 state: {
                                     param: params,
                                     event: event,
+                                    regdata: res.data.regs[0]
                                 }
                             })
                             history.go(0)
@@ -273,7 +281,11 @@ export default class RaceSummary extends Component {
     }
 
     render() {
+        if (this.props.location.state === undefined) {
+            history.goBack()
+        }
         const { event } = this.props.location.state
+        
         return (
             <div>
                 <Container className="mt-5" >

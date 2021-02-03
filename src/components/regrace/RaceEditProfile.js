@@ -191,7 +191,7 @@ export default function RaceProfile(props) {
                 total_price: showPrice(),
                 reciept_type: reciept_type
             }
-            history.push('/racesummary',
+            history.push('/regsummary',
                 {
                     ticket: tickets,
                     event: event,

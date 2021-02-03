@@ -180,7 +180,7 @@ export default class RaceDashboard extends Component {
                                     <Card className="px-4 py-3 mb-3">
                                         {this.showPersonList()}
                                         <Card.Body>
-                                            <Button type="submit" className="float-right btn-custom rounded-pill px-4 ml-2 mt-5" onClick={() => history.push('/racepayment/' + reg_data.id)} hidden={reg_data ? (reg_data.status === regStatusConstants.PAYMENT_WAITING ? false : true) : true}>ชำระค่าใช้จ่าย</Button>
+                                            <Button type="submit" className="float-right btn-custom rounded-pill px-4 ml-2 mt-5" onClick={() => history.push('/payment/' + reg_data.id)} hidden={reg_data ? (reg_data.status === regStatusConstants.PAYMENT_WAITING ? false : true) : true}>ชำระค่าใช้จ่าย</Button>
                                             {/* modal  */}
                                             {/* <ConditionsModal onClick={this.onClickConfirm}></ConditionsModal> */}
                                             {/* modal  */}

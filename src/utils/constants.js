@@ -121,6 +121,7 @@ export const api = {
   UPlOAD_IMAGECOVER: '/v2/uploadCover',
 
   MYREG_EVENT: '/v2/register/myRegEvent',
+  CHECK_REG_EVENT: '/v2/register/checkRegEventCode/',
 }
 
 export const category = {

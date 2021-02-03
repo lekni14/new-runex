@@ -70,7 +70,7 @@ class App extends React.Component {
               <Route exact path="/callback" component={Callback} />
               <PrivateRoute exact path="/" component={MyEventPage} />
               <PrivateRoute exact path="/register/:code" component={RaceProfile} />
-              <PrivateRoute path="/summary" component={RaceSummary} />
+              <PrivateRoute path="/regsummary" component={RaceSummary} />
               <PrivateRoute exact path="/raceedit" component={RaceEditProfile} />
               <PrivateRoute exact path="/addother" component={AddOtherPerson} />
               <PrivateRoute exact path="/payment" component={RacePayment} />

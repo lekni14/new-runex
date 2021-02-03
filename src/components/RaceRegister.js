@@ -26,11 +26,6 @@ export default class RaceRegister extends Component {
     }
     render() {
         const { event} = this.state 
-        // if(event.event.category.name === 'Run'){
-        //     history.push('/raceregister/'+eventID)
-        // }else{
-        //     history.push('/register/'+eventID)
-        // }
         return (
             <Register event={event} />
         )
@@ -40,11 +35,5 @@ export default class RaceRegister extends Component {
 const Visual = React.lazy(() => import('./regrace/RaceProfile'));
 function Register(props) {
     const {event} = props
-    // const {category} = (props.event)?props.event.category:null;
-    // console.log(event)
-    // if (event.category !== category.VR) {
-    //     return <Race event={event} tickets={tickets} products={products} />;
-    // }else {
-        return <Visual event={event}/>;
-    // }
+    return <Visual event={event}/>;
 }

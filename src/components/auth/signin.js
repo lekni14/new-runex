@@ -1,14 +1,12 @@
 /* eslint-disable no-useless-escape */
 //ModalComponent.js
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Form, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import iconuser from '../../images/icon-user.svg'
 import { utils } from '../../utils/utils'
 // import { service } from '../services/service';
 import { userService } from '../../services'
-import { history } from '../../store';
-import { Redirect } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from '../../lib/recoil-atoms';
 
@@ -24,8 +22,6 @@ import { userInfo } from '../../lib/recoil-atoms';
 //const [accessToken, setAccessToken] = useRecoilState(accessToken)
 
 export default function Signin(props) {
-
-  const [isLogin, setIsLogin] = useState(false)
   //const router = useRouter()
   const user = useRecoilValue(userInfo)
 
@@ -61,7 +57,7 @@ export default function Signin(props) {
   // }
 
   async function logout() {
-    if (isLogin) {
+    if (utils.isLogin()) {
       const response = await userService.logout()
       if (response !== undefined && response !== null) {
         if (response.code === 202) {
@@ -85,7 +81,7 @@ export default function Signin(props) {
       <div>
         <Navbar.Collapse id="basic-navbar-nav" >
           <Nav className="mr-auto">
-            <Nav.Link href="/my-event" hidden={!isLogin} style={{ color: '#121314' }} >รายการสมัคร</Nav.Link>
+            <Nav.Link href="/my-event" hidden={!utils.isLogin()} style={{ color: '#121314' }} >รายการสมัคร</Nav.Link>
           </Nav>
           <Form inline>
             <Nav.Link hidden={utils.isLogin()} onClick={showLogin} style={{ color: '#121314' }} >เข้าสู่ระบบ/ลงทะเบียน</Nav.Link>

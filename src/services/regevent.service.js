@@ -10,7 +10,8 @@ export const regEventService = {
     getPromoCodeInfo,
     chargeReg,
     editRegEvent,
-    getAllEventActivity
+    getAllEventActivity,
+    checkRegEvent,
 }
 
 async function myRegEvents () {
@@ -19,6 +20,10 @@ async function myRegEvents () {
 
 function regRaceEvent (data) {
     return service.call('POST', data, api.REGISTER)
+}
+
+function checkRegEvent(id){
+    return service.call('GET', {}, `${api.CHECK_REG_EVENT}${id}`)
 }
 
 function chargeReg(data){

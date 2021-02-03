@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from 'react'
 import { Row, Col, Media, Card, Button, Form, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
@@ -199,8 +200,7 @@ export default class RaceProfile extends Component {
     }
 
     onSelectedSize = (shirts) => {
-        console.log(shirts)
-        const { productTickets, reload } = this.state
+        const { reload } = this.state
         // var arr = productTickets
         // var currentIndex = this.checkTicketIndex(product)
         // if (currentIndex !== -1) {
@@ -419,7 +419,7 @@ export default class RaceProfile extends Component {
                     }
                     ticket_options.push(ticket_option)
                     history.push({
-                        pathname: '/racesummary',
+                        pathname: '/regsummary',
                         state: {
                             ticket: productTickets,
                             product: products,
@@ -455,7 +455,7 @@ export default class RaceProfile extends Component {
                     }
                     ticket_options.push(ticket_option)
                     history.push({
-                        pathname: '/racesummary',
+                        pathname: '/regsummary',
                         state: {
                             ticket: ticket,
                             product: productTickets,
@@ -505,7 +505,7 @@ export default class RaceProfile extends Component {
                                         <Card.Body>
                                             <h4 className="h4">{event ? event.name : ''}</h4>
                                             <p className="text-muted mb-4" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }} >ราคาค่าสมัคร</p>
-                                            <h1 className="mb-0" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }}>{this.showPrice() + ' ' + 'THB'} </h1>
+                                            <h1 className="mb-0" style={{ color: '#FA6400', display: ticket.price !== undefined ? "block" : 'none' }}>{this.showPrice() + 'THB'} </h1>
                                             <p className="text-muted mb-4" style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>(including. postage fee)</p>
                                             <Card.Title style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>Finisher’s Award</Card.Title>
                                             <Media style={{ display: event ? (event.is_free === true ? "none" : "block") : 'none' }}>

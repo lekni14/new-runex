@@ -10,6 +10,7 @@ const MyEventPage = () => {
     const getEvent = async () => {
         const res = await regEventService.myRegEvents()
         if (res !== undefined && res !== null) {
+            console.log(res)
             if (res.code === 200) {
                 setEvent(res.data)
             } 
