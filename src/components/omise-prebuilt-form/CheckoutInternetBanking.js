@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import Script from "react-load-script";
-
-import { OMISE_PUBLIC_KEY } from '../../utils/constants'
-
 import "./Checkout.css";
 import { Button } from "react-bootstrap";
 
@@ -12,7 +9,7 @@ export class CheckoutInternetBanking extends Component {
   handleLoadScript = () => {
     OmiseCard = window.OmiseCard;
     OmiseCard.configure({
-      OMISE_PUBLIC_KEY,
+      publicKey: process.env.REACT_APP_OMISE_PUBLIC_KEY,
       currency: "thb",
       frameLabel: "RUNEX",
       submitLabel: "PAY NOW",

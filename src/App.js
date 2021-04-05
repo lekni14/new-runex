@@ -15,6 +15,10 @@ import { RecoilRoot } from 'recoil'
 import { history } from './store'
 import PrivateRoute from './router/PrvateRoute'
 import MyEventPage from './components/event/MyEventPage'
+import Aboutus from './components/about-us'
+import Contact from './components/contact'
+import TermsAndCondition from './components/term'
+import RefundPolicy from './components/policy'
 
 // const override = css`
 //     display: block;
@@ -74,6 +78,10 @@ class App extends React.Component {
               <PrivateRoute exact path="/raceedit" component={RaceEditProfile} />
               <PrivateRoute exact path="/addother" component={AddOtherPerson} />
               <PrivateRoute exact path="/payment" component={RacePayment} />
+              <Route exact path="/about-us" component={Aboutus} />
+              <Route exact path="/contact" component={Contact} />
+              <Route exact path="/term" component={TermsAndCondition} />
+              <Route exact path="/policy" component={RefundPolicy} />
             </div>
             <Footer />
           </Suspense>

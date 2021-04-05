@@ -10,9 +10,6 @@ export const IMAGE_URL = 'https://runex.co:3006'
 export const HEADER = { headers: { 'Content-Type': 'application/json' } }
 export const PF = 'web'
 export const GA_ID = 'G-LC572RKD9Z'
-//Omise test key = pkey_test_5i6ivm4cotoab601bfr
-//Omise Production key = pkey_5i1p3nkjgq6vrrrfhkp
-export const OMISE_PUBLIC_KEY = "pkey_5i1p3nkjgq6vrrrfhkp"
 
 export const gaTracking = {
   PREVIEW_EVENT : 'PREVIEW_EVENT',
@@ -122,6 +119,7 @@ export const api = {
 
   MYREG_EVENT: '/v2/register/myRegEvent',
   CHECK_REG_EVENT: '/v2/register/checkRegEventCode/',
+  PAYMENT_REG_EVENT: '/v2/register/payment',
 }
 
 export const category = {

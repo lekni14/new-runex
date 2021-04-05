@@ -12,6 +12,7 @@ export const regEventService = {
     editRegEvent,
     getAllEventActivity,
     checkRegEvent,
+    getPaymentMethod,
 }
 
 async function myRegEvents () {
@@ -27,20 +28,21 @@ function checkRegEvent(id){
 }
 
 function chargeReg(data){
-    const headers = {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': 'Bearer ' + utils.getToken()
-    }
-    return axios({
-        headers: headers,
-        method: "POST",
-        url: `${API_URL}/register/payment`,
-        data: data,
-    }).then(response => {
-        return response
-    }).catch(error => {
-        return error
-    })
+    return service.call('POST', data, `${api.PAYMENT_REG_EVENT}`)
+    // const headers = {
+    //     'Content-Type': 'multipart/form-data',
+    //     'Authorization': 'Bearer ' + utils.getToken()
+    // }
+    // return axios({
+    //     headers: headers,
+    //     method: "POST",
+    //     url: `${API_URL}/register/payment`,
+    //     data: data,
+    // }).then(response => {
+    //     return response
+    // }).catch(error => {
+    //     return error
+    // })
 }
 
 function getRegEventDetail(regEventID) {
@@ -107,5 +109,22 @@ function getAllEventActivity(data){
     }).catch(error => {
         console.log(error)
         return { code: 302, status: error.status, msg: "get Activity fail" }
+    })
+}
+
+function getPaymentMethod(){
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + utils.getToken()
+    }
+    return axios({
+        headers: headers,
+        method: "GET",
+        url: `${API_URL}/paymethods`
+    }).then(response => {
+        return response
+    }).catch(error => {
+        console.log(error)
+        return error
     })
 }

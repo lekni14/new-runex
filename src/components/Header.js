@@ -4,7 +4,7 @@ import { Navbar, Image, Nav, NavDropdown } from 'react-bootstrap'
 //import logo from '../images/runex-logo.png'
 import logo from '../images/logo-runex.png'
 import { history } from '../store'
-import iconuser from '../images/icon-user.svg'
+// import iconuser from '../images/icon-user.svg'
 import { userService } from '../services'
 import { utils } from '../utils/utils'
 

@@ -81,7 +81,7 @@ export default function Signin(props) {
       <div>
         <Navbar.Collapse id="basic-navbar-nav" >
           <Nav className="mr-auto">
-            <Nav.Link href="/my-event" hidden={!utils.isLogin()} style={{ color: '#121314' }} >รายการสมัคร</Nav.Link>
+            <Nav.Link href="/" hidden={!utils.isLogin()} style={{ color: '#121314' }} >รายการสมัคร</Nav.Link>
           </Nav>
           <Form inline>
             <Nav.Link hidden={utils.isLogin()} onClick={showLogin} style={{ color: '#121314' }} >เข้าสู่ระบบ/ลงทะเบียน</Nav.Link>

@@ -26,6 +26,9 @@ export default function RaceProfile(props) {
     const [citycen_id, setCitycenID] = useState('')
     const [lastname, setLastname] = useState('')
     const [birthdate, setBirthdate] = useState('')
+    const [team, setTeam] = useState('')
+    const [zone, setZone] = useState('')
+    const [color, setColor] = useState('')
     const [phone, setPhone] = useState('')
     const [birthdateApi, setBirthdateApi] = useState('')
     const [gender, setGender] = useState('')
@@ -38,6 +41,7 @@ export default function RaceProfile(props) {
     const [tambon, setTambon] = useState(null)
     const [ticket, setTicket] = useState(null)
     const [validated, setValidated] = useState(false)
+    const [moo, setMoo] = useState('')
     const [address_no, setAddressNo] = useState('')
     const [errors, setErrors] = useState({});
     const [isReg, setIsReg] = useState(false)
@@ -198,12 +202,16 @@ export default function RaceProfile(props) {
             gender: gender,
             citycen_id: citycen_id,
             address: address,
+            moo: moo,
             address_no: address_no,
             tambon: tambon,
             firstname: firstname,
             lastname: lastname,
             blood_type: blood_type,
-            fullname: firstname + ' ' + lastname
+            fullname: firstname + ' ' + lastname,
+            zone : zone,
+            team : team,
+            color : color
         }
 
         if (ticket === undefined || ticket === null) {
@@ -441,9 +449,15 @@ export default function RaceProfile(props) {
                                             <br />
 
                                             <Form.Group controlId="formGridAddress">
-                                                <Form.Label>Address<span className="text-danger">*</span></Form.Label>
-                                                <Form.Control as="textarea" rows="2" placeholder="" value={address_no} required onChange={e => setAddressNo(e.target.value)} />
+                                                <Form.Label>Address, ที่อยู่<span className="text-danger">*</span></Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={address_no} required onChange={e => setAddressNo(e.target.value)} />
                                                 <Form.Control.Feedback type="invalid">Address is required!</Form.Control.Feedback>
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Moo, หมู่<span className="text-danger">*</span></Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={moo} required onChange={e => setMoo(e.target.value)} />
+                                                <Form.Control.Feedback type="invalid">Moo is required!</Form.Control.Feedback>
                                             </Form.Group>
 
                                             <Form.Group controlId="formGridZip">
@@ -529,6 +543,21 @@ export default function RaceProfile(props) {
                                                     )}
                                                 />
                                                 <Form.Control.Feedback type="invalid">Postcode is required!</Form.Control.Feedback>
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Team, ทีม</Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={team} required onChange={e => setTeam(e.target.value)} />
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Color, หมู่</Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={color} onChange={e => setColor(e.target.value)} />
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Zone, โซน, ภาค</Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={zone} onChange={e => setZone(e.target.value)} />
                                             </Form.Group>
                                             <br />
                                             <hr color='#FA6400'></hr>

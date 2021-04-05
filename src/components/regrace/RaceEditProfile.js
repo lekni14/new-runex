@@ -41,6 +41,10 @@ export default function RaceProfile(props) {
     const [ticket, setTicket] = useState(ticketOption.tickets)
     const [validated, setValidated] = useState(false)
     const [address_no, setAddressNo] = useState(user.address_no)
+    const [moo, setMoo] = useState(user.moo)
+    const [team, setTeam] = useState(user.team)
+    const [zone, setZone] = useState(user.zone)
+    const [color, setColor] = useState(user.color)
 
     function onSelectBirthdate (e){
         setBirthdateApi(utils.convertDateToApi(e))
@@ -169,6 +173,10 @@ export default function RaceProfile(props) {
         data.lastname = lastname
         data.blood_type = blood_type
         data.fullname = firstname + ' ' + lastname
+        data.moo = moo
+        data.zone = zone
+        data.team = team
+        data.color = color
 
         if (ticket.id === undefined || ticket.id === null) {
             Swal.fire(
@@ -387,9 +395,15 @@ export default function RaceProfile(props) {
                                             <br />
 
                                             <Form.Group controlId="formGridAddress">
-                                                <Form.Label>Address<span className="text-danger">*</span></Form.Label>
+                                                <Form.Label>Address, เลขที่<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control as="textarea" rows="2" placeholder="" value={address_no} required onChange={e => setAddressNo(e.target.value)} />
                                                 <Form.Control.Feedback type="invalid">Address is required!</Form.Control.Feedback>
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Moo, หมู่<span className="text-danger">*</span></Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={moo} required onChange={e => setMoo(e.target.value)} />
+                                                <Form.Control.Feedback type="invalid">Moo is required!</Form.Control.Feedback>
                                             </Form.Group>
 
                                             <Form.Group controlId="formGridZip">
@@ -482,6 +496,22 @@ export default function RaceProfile(props) {
                                                 />
                                                 <Form.Control.Feedback type="invalid">Postcode is required!</Form.Control.Feedback>
                                             </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Team, ทีม</Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={team} required onChange={e => setTeam(e.target.value)} />
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Color, หมู่</Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={color} onChange={e => setColor(e.target.value)} />
+                                            </Form.Group>
+
+                                            <Form.Group controlId="formGridAddress">
+                                                <Form.Label>Zone, โซน, ภาค</Form.Label>
+                                                <Form.Control type="text" rows="2" placeholder="" value={zone} onChange={e => setZone(e.target.value)} />
+                                            </Form.Group>
+
                                             <br />
                                             <hr color='#FA6400'></hr>
                                             <br />

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Row, Col, Media, Card, Container } from 'react-bootstrap'
 import iconmedal from '../../images/icon-medal.svg'
 import { utils } from '../../utils/utils'
-import { category, regStatusConstants } from '../../utils/constants'
+import { regStatusConstants } from '../../utils/constants'
 import { history } from '../../store'
 import { regEventService } from '../../services'
 import ConditionsModal from './ConditionsModal'
@@ -93,6 +93,7 @@ export default class RaceSummary extends Component {
                     event: event,
                     tickets: ticket,
                     status: status,
+                    ticket_id: ticket.id,
                     payment_type: paymentType,
                     total_price: total,
                     promo_code: this.state.promoText,
@@ -149,6 +150,7 @@ export default class RaceSummary extends Component {
                     event: event,
                     tickets: ticket,
                     event_code: event.code,
+                    ticket_id: ticket.id,
                     status: status,
                     payment_type: paymentType,
                     total_price: total,
@@ -211,7 +213,7 @@ export default class RaceSummary extends Component {
 
                 arr.push(
                     <Card.Body className="border-bottom" key={index}>
-                        <h5 className="h5 mb-2">ข้อมูล - ผู้สมัครคนที่ {index + 1}</h5>
+                        <h5 className="h5 mb-2">ข้อมูล - ผู้สมัคร</h5>
                         <Row>
                             <Col>
                                 <h6 className="h5 mb-0">{item.user_option.firstname + ' ' + item.user_option.lastname}</h6>
@@ -340,7 +342,7 @@ export default class RaceSummary extends Component {
                                     <Card className="px-4 py-3 mb-3">
                                         {this.showPersonList()}
                                         <Card.Body >
-                                            <button style={{ display: event ? (event.category === category.VR ? "none" : "block") : 'none' }} type="button"  className="btn btn-outline-primary rounded-pill custom-font mr-2 " onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button>
+                                            {/* <button style={{ display: event ? (event.category === category.VR ? "none" : "block") : 'none' }} type="button"  className="btn btn-outline-primary rounded-pill custom-font mr-2 " onClick={this.onClickAddBtn}>+  เพิ่มคนสมัคร</button> */}
                                             {/* style={{ display: ticket_options[0].tickets.category === 'single' ? "none" : '' }} */}
                                             {/* <Button type="submit" className="btn-outline-primary rounded-pill" >
                                         ยืนยัน</Button> */}
